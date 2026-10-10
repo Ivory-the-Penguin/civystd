@@ -1,6 +1,6 @@
 /*
   ----- Ivy Math -----
-  Version: 0.5.0
+  Version: 0.6.0
   License: MIT-0
 
   This header only library has some useful maths functions for the ivystd.
@@ -10,7 +10,7 @@
 #define IVY_MATH_H
 
 #define IVY_MATH_MAJOR 0
-#define IVY_MATH_MINOR 5
+#define IVY_MATH_MINOR 6
 #define IVY_MATH_FIX 0
 
 #include "ivy_core.h"
@@ -32,6 +32,66 @@
 #define IVY_LERP(a, b, t) ((a) + ((b) - (a)) * (t))
 
 #define IVY_ABS(x) ((x) < 0 ? -(x) : (x))
+
+// exponent by squaring
+IVY_FORCE_INLINE float ivy_pow_f(float x, i64 n) {
+  if (n < 0) {
+    x = 1 / x;
+    n *= -1;
+  }
+
+  if (n == 0) {
+    return 1;
+  }
+
+  float y = 1;
+  while (n > 1) {
+    if (n & 1) {
+      y = x * y;
+      n -= 1;
+    }
+    x = x * x;
+    n >>= 1;
+  }
+
+  return x * y;
+}
+
+// exponent by squaring
+IVY_FORCE_INLINE u64 ivy_pow_u64(u64 x, u64 n) {
+  if (n == 0) {
+    return 1;
+  }
+
+  float y = 1;
+  while (n > 1) {
+    if (n & 1) {
+      y = x * y;
+      n -= 1;
+    }
+    x = x * x;
+    n >>= 1;
+  }
+
+  return x * y;
+}
+
+// exponent by squaring
+IVY_FORCE_INLINE i64 ivy_pow_i64(i64 x, u64 n) {
+  if (n == 0) {
+    return 1;
+  }
+
+  b8 is_negative = (x < 0);
+
+  i64 out = (i64)ivy_pow_u64((x < 0 ? (u64)-x : (u64)x), n);
+
+  if (x < 0 && (n & 1)) {
+    out *= -1;
+  }
+
+  return out;
+}
 
 #define IVY_COMPARE_DECIMAL(a, b, precision) (IVY_ABS((a) - (b)) <= (precision))
 
