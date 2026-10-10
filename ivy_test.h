@@ -11,7 +11,7 @@
 
 #define IVY_TEST_MAJOR 1
 #define IVY_TEST_MINOR 2
-#define IVY_TEST_FIX 0
+#define IVY_TEST_FIX 1
 
 #include "ivy_core.h"
 #include "ivy_fb.h"
@@ -81,7 +81,7 @@ extern __thread allocator_t _scratch_alloc;
 #define TEST_EXPECT(a, b, fmt)                                                 \
   TEST_ASSERT_FMT(a == b,                                                      \
                   "Check for {cs} failed: Expected " fmt ", got " fmt ".", #a, \
-                  a, b)
+                  b, a)
 
 #define TEST_OK() \
   do {            \
