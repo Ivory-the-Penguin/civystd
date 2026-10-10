@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.3.1
+  Version: 1.3.2
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -179,7 +179,7 @@ IVY_FORCE_INLINE void _fmt_int(va_list args, string_builder_t *buffer,
 
   u64 n;
   if (!is_unsigned) {
-    u64 in_n;
+    i64 in_n;
     if (is_long) {
       in_n = va_arg(args, i64);
     } else {
