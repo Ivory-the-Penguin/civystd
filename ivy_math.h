@@ -1,6 +1,6 @@
 /*
   ----- Ivy Math -----
-  Version: 0.4.0
+  Version: 0.5.0
   License: MIT-0
 
   This header only library has some useful maths functions for the ivystd.
@@ -10,7 +10,7 @@
 #define IVY_MATH_H
 
 #define IVY_MATH_MAJOR 0
-#define IVY_MATH_MINOR 4
+#define IVY_MATH_MINOR 5
 #define IVY_MATH_FIX 0
 
 #include "ivy_core.h"
@@ -32,6 +32,8 @@
 #define IVY_LERP(a, b, t) ((a) + ((b) - (a)) * (t))
 
 #define IVY_ABS(x) ((x) < 0 ? -(x) : (x))
+
+#define IVY_COMPARE_DECIMAL(a, b, precision) (IVY_ABS((a) - (b)) <= (precision))
 
 IVY_FORCE_INLINE float ivy_sin(float x) {
   float quot = x * IVY_INV_2PI;
