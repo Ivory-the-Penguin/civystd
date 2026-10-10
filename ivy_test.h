@@ -1,6 +1,6 @@
 /*
   ----- Ivy Test ------
-  Version: 1.2.0
+  Version: 1.2.1
   License: MIT-0
 
   This stb-style header has testing for the ivystd.
