@@ -18,6 +18,8 @@ TEST_CASE(core_type_sizes) {
   TEST_ASSERT(sizeof(b16) == 2, "b16 should be 2 bytes long");
   TEST_ASSERT(sizeof(b32) == 4, "b32 should be 4 bytes long");
 
+  TEST_ASSERT(sizeof(c8) == 1, "c8 should be a byte long");
+
   TEST_OK();
 }
 
