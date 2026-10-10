@@ -30,7 +30,37 @@ TEST_CASE(math_abs_unsigned) {
   TEST_OK();
 }
 
+TEST_CASE(math_min) {
+  TEST_EXPECT(IVY_MIN(0, 0), 0, "{i}");
+  TEST_EXPECT(IVY_MIN(0, 100), 0, "{i}");
+  TEST_EXPECT(IVY_MIN(99, 100), 99, "{i}");
+
+  TEST_EXPECT(IVY_MIN(0, -100), -100, "{i}");
+  TEST_EXPECT(IVY_MIN(-99, 100), -99, "{i}");
+
+  TEST_EXPECT(IVY_MIN(I32_MAX, I32_MIN), I32_MIN, "{i}");
+  TEST_EXPECT(IVY_MIN(I64_MAX, I64_MIN), I64_MIN, "{i}");
+
+  TEST_OK();
+}
+
+TEST_CASE(math_max) {
+  TEST_EXPECT(IVY_MAX(0, 0), 0, "{i}");
+  TEST_EXPECT(IVY_MAX(0, 100), 100, "{i}");
+  TEST_EXPECT(IVY_MAX(99, 100), 100, "{i}");
+
+  TEST_EXPECT(IVY_MAX(0, -100), 0, "{i}");
+  TEST_EXPECT(IVY_MAX(-99, 100), 100, "{i}");
+
+  TEST_EXPECT(IVY_MAX(I32_MAX, I32_MIN), I32_MAX, "{i}");
+  TEST_EXPECT(IVY_MAX(I64_MAX, I64_MIN), I64_MAX, "{i}");
+
+  TEST_OK();
+}
+
 TEST_SUITE(math_suite) {
   TEST_RUN(math_abs_signed);
   TEST_RUN(math_abs_unsigned);
+  TEST_RUN(math_min);
+  TEST_RUN(math_max);
 }
