@@ -1,6 +1,6 @@
 /*
   ----- Ivy Math -----
-  Version: 0.6.0
+  Version: 0.6.1
   License: MIT-0
 
   This header only library has some useful maths functions for the ivystd.
@@ -11,7 +11,7 @@
 
 #define IVY_MATH_MAJOR 0
 #define IVY_MATH_MINOR 6
-#define IVY_MATH_FIX 0
+#define IVY_MATH_FIX 1
 
 #include "ivy_core.h"
 
@@ -63,7 +63,7 @@ IVY_FORCE_INLINE u64 ivy_pow_u64(u64 x, u64 n) {
     return 1;
   }
 
-  float y = 1;
+  u64 y = 1;
   while (n > 1) {
     if (n & 1) {
       y = x * y;
@@ -81,8 +81,6 @@ IVY_FORCE_INLINE i64 ivy_pow_i64(i64 x, u64 n) {
   if (n == 0) {
     return 1;
   }
-
-  b8 is_negative = (x < 0);
 
   i64 out = (i64)ivy_pow_u64((x < 0 ? (u64)-x : (u64)x), n);
 
