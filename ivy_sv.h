@@ -2,9 +2,7 @@
   ----- Ivy String View -----
   Version: 1.4.0
   License: MIT-0
-
-  This stb-style header has a feature-full string view for the ivystd.
-
+This stb-style header has a feature-full string view for the ivystd.
   Use IVY_IMPL macro for implementation
 
   ----- Usage -----
@@ -91,10 +89,12 @@
 #define IVY_SV_FIX 0
 
 #include <ctype.h>
+#include <math.h>
 #include <string.h>
 
 #include "ivy_allocator.h"
 #include "ivy_core.h"
+#include "ivy_math.h"
 
 typedef struct {
   const c8 *data;
@@ -205,14 +205,13 @@ string_view_t sv_chop_by_type_rev(string_view_t *sv, int (*is_type)(int c));
 i64 sv_to_int(string_view_t sv);
 u64 sv_to_uint(string_view_t sv);
 float sv_to_float_d(string_view_t sv);
-float sv_to_float_e(string_view_t sv);
 
 // All of these functions have a secret null terminator
 string_view_t sv_from_int(allocator_t alloc, i64 n);
 string_view_t sv_from_uint(allocator_t alloc, u64 n);
-string_view_t sv_from_float_d(allocator_t alloc, float n);
-string_view_t sv_from_float_e(allocator_t alloc, float n);
+string_view_t sv_from_float_d(allocator_t alloc, float n, u64 precision);
 
+#define IVY_IMPL
 #ifdef IVY_IMPL
 
 string_view_t sv_chop_by_delimiter(string_view_t *sv, c8 delimiter) {
@@ -425,75 +424,65 @@ string_view_t sv_from_uint(allocator_t alloc, u64 n) {
   };
 }
 
-float sv_to_float_d(string_view_t sv) {
-  IVY_ASSERT(sv.length > 0, "Can't convert an empty string view");
+float sv_to_float_d(string_view_t sv) {}
 
-  IVY_ASSERT(isdigit(sv.data[0]) || sv.data[0] == '.' || sv.data[0] == '-',
-             "String view starts with an invalid character");
+string_view_t sv_from_float_d(allocator_t alloc, float n, u64 precision) {
+  IVY_ASSERT(precision <= 9, "Precision can't be bigger than 9");
+  float_bits bits = ivy_get_float_bits(n);
 
-  b8 is_negative = (sv.data[0] == '-');
-  if (is_negative) {
-    sv = sv_chop_left(sv, 1);
-  }
-
-  IVY_ASSERT(sv.length > 0, "Can't convert only a minus");
-
-  b8 found_decimal = (sv.data[0] == '.');
-  u64 decimal_pos = 0;
-
-  SV_FOREACH(sv, i, 0) {
-    if (!found_decimal) {
-      IVY_ASSERT(isdigit(sv.data[i]) || sv.data[i] == '.',
-                 "String view contains multiple minus's or it's not a digit");
-      if (sv.data[i] == '.') {
-        found_decimal = true;
-        decimal_pos = i;
-      }
+  if (bits.exponent == 0xFF) {
+    c8 *buffer = ivy_alloc(alloc, 4 + bits.sign);
+    if (bits.mantissa != 0) {
+      memcpy(buffer, "NAN", 4 * sizeof(c8));
     } else {
-      IVY_ASSERT(isdigit(sv.data[i]),
-                 "Multiple minus's or decimals, or it's not a digit");
+      if (bits.sign) {
+        memcpy(buffer, "-INF", 5 * sizeof(c8));
+
+      } else {
+        memcpy(buffer, "INF", 4 * sizeof(c8));
+      }
     }
+
+    return (string_view_t){
+        .data = buffer,
+        .length = 3 + bits.sign,
+    };
   }
 
-  float out = 0.0f;
+  if (bits.exponent == 0 && bits.mantissa == 0) {
+    c8 *buffer = ivy_alloc(alloc, 4 + bits.sign);
 
-  string_view_t int_part;
-  if (found_decimal) {
-    int_part = sv_chop_right(sv, sv.length - decimal_pos);
+    if (bits.sign) {
+      *buffer++ = '-';
+    }
+
+    memcpy(buffer, "0.0", 4 * sizeof(c8));
+
+    return (string_view_t){
+        .data = buffer - bits.sign,
+        .length = 3 + bits.sign,
+    };
+  }
+
+  u32 M;
+  i32 E;
+  if (bits.exponent == 0) {
+    M = bits.mantissa;
+    E = -149;
   } else {
-    int_part = sv;
+    M = (1 << 23) | bits.mantissa;
+    E = (i32)bits.exponent - 150;
   }
 
-  IVY_ASSERT(int_part.length <= 38,
-             "Float integer part exceeds maximum exponent bounds");
-
-  SV_FOREACH(int_part, i, 0) {
-    out = (float)(int_part.data[i] - '0') + out * 10.0f;
+  u64 scaled = M * ivy_pow_u64(5, precision);
+  u64 w;
+  i32 s = E + precision;
+  if (s >= 0) {
+    w = scaled << s;
+  } else {
+    u32 sh = (u32)(-s);
+    w = (scaled + (1ull << (sh - 1u))) >> sh;
   }
-
-  float decimal_out = 0.0f;
-  if (found_decimal) {
-    string_view_t decimal = sv;
-    decimal = sv_chop_left(decimal, decimal_pos + 1);
-
-    SV_FOREACH_REV(decimal, i, 0) {
-      decimal_out = (decimal_out * 0.1f) + (float)(decimal.data[i] - '0');
-    }
-    decimal_out *= 0.1f;
-  }
-
-  out += decimal_out;
-
-  if (is_negative) {
-    return out * -1.0f;
-  }
-
-  return out;
-}
-
-float sv_to_float_e(string_view_t sv) {
-  float out = 0.0f;
-  return out;
 }
 
 #endif

@@ -152,4 +152,21 @@ IVY_FORCE_INLINE float ivy_pow(float x, int exp) {
   return out;
 }
 
+typedef struct {
+  u32 sign;
+  u32 exponent;
+  u32 mantissa;
+} float_bits;
+
+float_bits ivy_get_float_bits(float n) {
+  u32 bits;
+  memcpy(&bits, &n, sizeof(n));
+
+  return (float_bits){
+      .sign = bits >> 31,
+      .exponent = (bits >> 23) & 0xFF,
+      .mantissa = bits & 0x7FFFFF,
+  };
+}
+
 #endif
