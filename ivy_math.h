@@ -1,6 +1,6 @@
 /*
   ----- Ivy Math -----
-  Version: 0.6.1
+  Version: 0.6.2
   License: MIT-0
 
   This header only library has some useful maths functions for the ivystd.
@@ -11,7 +11,7 @@
 
 #define IVY_MATH_MAJOR 0
 #define IVY_MATH_MINOR 6
-#define IVY_MATH_FIX 1
+#define IVY_MATH_FIX 2
 
 #include "ivy_core.h"
 
@@ -34,7 +34,7 @@
 #define IVY_ABS(x) ((x) < 0 ? -(x) : (x))
 
 // exponent by squaring
-IVY_FORCE_INLINE float ivy_pow_f(float x, i64 n) {
+IVY_FORCE_INLINE f32 ivy_pow_f(f32 x, i64 n) {
   if (n < 0) {
     x = 1 / x;
     n *= -1;
@@ -44,7 +44,7 @@ IVY_FORCE_INLINE float ivy_pow_f(float x, i64 n) {
     return 1;
   }
 
-  float y = 1;
+  f32 y = 1;
   while (n > 1) {
     if (n & 1) {
       y = x * y;
@@ -93,32 +93,32 @@ IVY_FORCE_INLINE i64 ivy_pow_i64(i64 x, u64 n) {
 
 #define IVY_COMPARE_DECIMAL(a, b, precision) (IVY_ABS((a) - (b)) <= (precision))
 
-IVY_FORCE_INLINE float ivy_sin(float x) {
-  float quot = x * IVY_INV_2PI;
-  float rounded = (float)((int)(quot + (quot >= 0.0f ? 0.5f : -0.5f)));
+IVY_FORCE_INLINE f32 ivy_sin(f32 x) {
+  f32 quot = x * IVY_INV_2PI;
+  f32 rounded = (f32)((int)(quot + (quot >= 0.0f ? 0.5f : -0.5f)));
   x = x - IVY_2PI * rounded;
 
   if (x > IVY_HALF_PI) x = IVY_PI - x;
   if (x < -IVY_HALF_PI) x = -IVY_PI - x;
 
-  float x2 = x * x;
+  f32 x2 = x * x;
 
-  const float c1 = -1.666666667e-01f;
-  const float c2 = 8.333333333e-03f;
-  const float c3 = -1.984126984e-04f;
-  const float c4 = 2.755731922e-06f;
+  const f32 c1 = -1.666666667e-01f;
+  const f32 c2 = 8.333333333e-03f;
+  const f32 c3 = -1.984126984e-04f;
+  const f32 c4 = 2.755731922e-06f;
 
   return x * (1.0f + x2 * (c1 + x2 * (c2 + x2 * (c3 + x2 * c4))));
 }
 
-IVY_FORCE_INLINE float ivy_cos(float x) { return ivy_sin(x + IVY_HALF_PI); }
+IVY_FORCE_INLINE f32 ivy_cos(f32 x) { return ivy_sin(x + IVY_HALF_PI); }
 
-IVY_FORCE_INLINE float ivy_tan(float x) { return ivy_sin(x) / ivy_cos(x); }
+IVY_FORCE_INLINE f32 ivy_tan(f32 x) { return ivy_sin(x) / ivy_cos(x); }
 
-IVY_FORCE_INLINE float ivy_inv_sqrt(float x) {
+IVY_FORCE_INLINE f32 ivy_inv_sqrt(f32 x) {
   long i;
-  float x2, y;
-  const float threehalfs = 1.5f;
+  f32 x2, y;
+  const f32 threehalfs = 1.5f;
 
   x2 = x * 0.5f;
   y = x;
@@ -130,16 +130,16 @@ IVY_FORCE_INLINE float ivy_inv_sqrt(float x) {
   return y;
 }
 
-IVY_FORCE_INLINE float ivy_sqrt(float x) {
+IVY_FORCE_INLINE f32 ivy_sqrt(f32 x) {
   return x > 0.0f ? x * ivy_inv_sqrt(x) : 0.0f;
 }
 
-IVY_FORCE_INLINE float ivy_pow(float x, int exp) {
+IVY_FORCE_INLINE f32 ivy_pow(f32 x, i32 exp) {
   if (x == 0.0f && exp < 0) {
     return 0.0f;
   }
 
-  float out = 1.0f;
+  f32 out = 1.0f;
   if (exp < 0) {
     x = 1.0f / x;
     exp = -exp;
@@ -156,13 +156,13 @@ typedef struct {
   u32 sign;
   u32 exponent;
   u32 mantissa;
-} float_bits;
+} f32_bits;
 
-float_bits ivy_get_float_bits(float n) {
+f32_bits ivy_get_f32_bits(f32 n) {
   u32 bits;
   memcpy(&bits, &n, sizeof(n));
 
-  return (float_bits){
+  return (f32_bits){
       .sign = bits >> 31,
       .exponent = (bits >> 23) & 0xFF,
       .mantissa = bits & 0x7FFFFF,

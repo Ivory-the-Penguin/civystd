@@ -1,6 +1,6 @@
 /*
   ----- Ivy Color -----
-  Version: 0.2.1
+  Version: 0.2.2
   License: MIT-0
 
   This is a header only library which has an implemention for colors
@@ -11,7 +11,7 @@
 
 #define IVY_COLOR_MAJOR 0
 #define IVY_COLOR_MINOR 2
-#define IVY_COLOR_FIX 1
+#define IVY_COLOR_FIX 2
 
 #include "ivy_core.h"
 #include "ivy_linmath.h"
@@ -35,7 +35,7 @@ typedef union {
 #define COLOR_BLACK color(0.0f, 0.0f, 0.0f, 1.0f)
 #define COLOR_NONE color(0.0f, 0.0f, 0.0f, 0.0f)
 
-IVY_FORCE_INLINE color_t color(float r, float g, float b, float a) {
+IVY_FORCE_INLINE color_t color(f32 r, f32 g, f32 b, f32 a) {
   return (color_t){
       .r = r,
       .g = g,
@@ -66,7 +66,7 @@ IVY_FORCE_INLINE color_t color_from_cb(color_bytes_t cb) {
   return color(cb.r / 255.0f, cb.g / 255.0f, cb.b / 255.0f, cb.a / 255.0f);
 }
 
-IVY_FORCE_INLINE color_t color_lerp(color_t a, color_t b, float t) {
+IVY_FORCE_INLINE color_t color_lerp(color_t a, color_t b, f32 t) {
   return vec4_lerp(a, b, t);
 }
 

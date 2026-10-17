@@ -1,6 +1,6 @@
 /*
   ----- Ivy Linmath -----
-  Version: 1.0.3
+  Version: 1.0.4
   License: MIT-0
 
   This is a header only library for linear algebra in the ivystd.
@@ -20,7 +20,7 @@
 
   ~ vecn(...) : Makes a vector, with all the components (...)
 
-  ~ vecn_s(float scalar) : Makes a vector, where each component is the scalar
+  ~ vecn_s(f32 scalar) : Makes a vector, where each component is the scalar
 
   ~ vecn_add(a, b) : Returns a + b
 
@@ -86,7 +86,7 @@
 
 #define IVY_LINMATH_MAJOR 1
 #define IVY_LINMATH_MINOR 0
-#define IVY_LINMATH_FIX 3
+#define IVY_LINMATH_FIX 4
 
 #include "ivy_core.h"
 #include "ivy_math.h"
@@ -123,69 +123,69 @@
 
 typedef union {
   struct {
-    float x;
-    float y;
+    f32 x;
+    f32 y;
   };
 
   struct {
-    float u;
-    float v;
+    f32 u;
+    f32 v;
   };
 
   struct {
-    float width;
-    float height;
+    f32 width;
+    f32 height;
   };
 
-  float elements[2];
+  f32 elements[2];
 } vec2_t;
 
 typedef union {
   struct {
-    float x;
-    float y;
-    float z;
+    f32 x;
+    f32 y;
+    f32 z;
   };
 
   struct {
-    float u;
-    float v;
-    float w;
+    f32 u;
+    f32 v;
+    f32 w;
   };
 
   struct {
-    float r;
-    float g;
-    float b;
+    f32 r;
+    f32 g;
+    f32 b;
   };
 
   struct {
-    float width;
-    float height;
-    float length;
+    f32 width;
+    f32 height;
+    f32 length;
   };
 
   struct {
     vec2_t xy;
-    float _ignored0;
+    f32 _ignored0;
   };
 
   struct {
-    float _ignored1;
+    f32 _ignored1;
     vec2_t yz;
   };
 
   struct {
     vec2_t uv;
-    float _ignored2;
+    f32 _ignored2;
   };
 
   struct {
-    float _ignored3;
+    f32 _ignored3;
     vec2_t vw;
   };
 
-  float elements[3];
+  f32 elements[3];
 } vec3_t;
 
 typedef union {
@@ -193,67 +193,67 @@ typedef union {
     union {
       vec3_t xyz;
       struct {
-        float x;
-        float y;
-        float z;
+        f32 x;
+        f32 y;
+        f32 z;
       };
     };
-    float w;
+    f32 w;
   };
 
   struct {
     union {
       vec3_t rgb;
       struct {
-        float r;
-        float g;
-        float b;
+        f32 r;
+        f32 g;
+        f32 b;
       };
     };
-    float a;
+    f32 a;
   };
 
   struct {
     vec2_t xy;
-    float _ignored0;
-    float _ignored1;
+    f32 _ignored0;
+    f32 _ignored1;
   };
 
   struct {
-    float _ignored2;
+    f32 _ignored2;
     vec2_t yz;
-    float _ignored3;
+    f32 _ignored3;
   };
 
   struct {
-    float _ignored4;
-    float _ignored5;
+    f32 _ignored4;
+    f32 _ignored5;
     vec2_t zw;
   };
 
-  float elements[4];
+  f32 elements[4];
 
 #ifdef IVY_LINMATH_USE_SSE
   __m128 sse;
 #endif
 
 #ifdef IVY_LINMATH_USE_NEON
-  float32x4_t neon;
+  f3232x4_t neon;
 #endif
 } vec4_t;
 
 typedef union {
-  float elements[2][2];
+  f32 elements[2][2];
   vec2_t columns[2];
 } mat2_t;
 
 typedef union {
-  float elements[3][3];
+  f32 elements[3][3];
   vec3_t columns[3];
 } mat3_t;
 
 typedef union {
-  float elements[4][4];
+  f32 elements[4][4];
   vec4_t columns[4];
 } mat4_t;
 
@@ -262,22 +262,22 @@ typedef union {
     union {
       vec3_t xyz;
       struct {
-        float x;
-        float y;
-        float z;
+        f32 x;
+        f32 y;
+        f32 z;
       };
     };
-    float w;
+    f32 w;
   };
 
-  float elements[4];
+  f32 elements[4];
 
 #ifdef IVY_LINMATH_USE_SSE
   __m128 sse;
 #endif
 
 #ifdef IVY_LINMATH_USE_NEON
-  float32x4_t neon;
+  f3232x4_t neon;
 #endif
 } quat_t;
 
@@ -287,11 +287,9 @@ typedef union {
 #define VEC2_ZERO vec2_s(0.0f)
 #define VEC2_ONE vec2_s(1.0f)
 
-IVY_FORCE_INLINE vec2_t vec2(float x, float y) {
-  return (vec2_t){.x = x, .y = y};
-}
+IVY_FORCE_INLINE vec2_t vec2(f32 x, f32 y) { return (vec2_t){.x = x, .y = y}; }
 
-IVY_FORCE_INLINE vec2_t vec2_s(float scalar) {
+IVY_FORCE_INLINE vec2_t vec2_s(f32 scalar) {
   return (vec2_t){.x = scalar, .y = scalar};
 }
 
@@ -311,30 +309,28 @@ IVY_FORCE_INLINE vec2_t vec2_div(vec2_t a, vec2_t b) {
   return vec2(a.x / b.x, a.y / b.y);
 }
 
-IVY_FORCE_INLINE vec2_t vec2_add_s(vec2_t vec, float scalar) {
+IVY_FORCE_INLINE vec2_t vec2_add_s(vec2_t vec, f32 scalar) {
   return vec2_add(vec, vec2_s(scalar));
 }
 
-IVY_FORCE_INLINE vec2_t vec2_sub_s(vec2_t vec, float scalar) {
+IVY_FORCE_INLINE vec2_t vec2_sub_s(vec2_t vec, f32 scalar) {
   return vec2_sub(vec, vec2_s(scalar));
 }
 
-IVY_FORCE_INLINE vec2_t vec2_mul_s(vec2_t vec, float scalar) {
+IVY_FORCE_INLINE vec2_t vec2_mul_s(vec2_t vec, f32 scalar) {
   return vec2_mul(vec, vec2_s(scalar));
 }
 
-IVY_FORCE_INLINE vec2_t vec2_div_s(vec2_t vec, float scalar) {
+IVY_FORCE_INLINE vec2_t vec2_div_s(vec2_t vec, f32 scalar) {
   return vec2_div(vec, vec2_s(scalar));
 }
 
-IVY_FORCE_INLINE float vec2_dot(vec2_t a, vec2_t b) {
+IVY_FORCE_INLINE f32 vec2_dot(vec2_t a, vec2_t b) {
   return a.x * b.x + a.y * b.y;
 }
 
-IVY_FORCE_INLINE float vec2_len_sq(vec2_t vec) { return vec2_dot(vec, vec); }
-IVY_FORCE_INLINE float vec2_len(vec2_t vec) {
-  return ivy_sqrt(vec2_len_sq(vec));
-}
+IVY_FORCE_INLINE f32 vec2_len_sq(vec2_t vec) { return vec2_dot(vec, vec); }
+IVY_FORCE_INLINE f32 vec2_len(vec2_t vec) { return ivy_sqrt(vec2_len_sq(vec)); }
 
 IVY_FORCE_INLINE b8 vec2_eq(vec2_t a, vec2_t b) {
   return (a.x == b.x && a.y == b.y);
@@ -348,15 +344,15 @@ IVY_FORCE_INLINE vec2_t vec2_norm(vec2_t vec) {
   return vec2_div_s(vec, vec2_len(vec));
 }
 
-IVY_FORCE_INLINE vec2_t vec2_lerp(vec2_t a, vec2_t b, float t) {
+IVY_FORCE_INLINE vec2_t vec2_lerp(vec2_t a, vec2_t b, f32 t) {
   return vec2_add(a, vec2_mul_s(vec2_sub(b, a), t));
 }
 
-IVY_FORCE_INLINE float vec2_dist_sq(vec2_t a, vec2_t b) {
+IVY_FORCE_INLINE f32 vec2_dist_sq(vec2_t a, vec2_t b) {
   return vec2_len_sq(vec2_sub(a, b));
 }
 
-IVY_FORCE_INLINE float vec2_dist(vec2_t a, vec2_t b) {
+IVY_FORCE_INLINE f32 vec2_dist(vec2_t a, vec2_t b) {
   return vec2_len(vec2_sub(a, b));
 }
 
@@ -370,15 +366,15 @@ IVY_FORCE_INLINE vec2_t vec2_refl(vec2_t vec, vec2_t norm) {
 #define VEC3_ZERO vec3_s(0.0f)
 #define VEC3_ONE vec3_s(1.0f)
 
-IVY_FORCE_INLINE vec3_t vec3(float x, float y, float z) {
+IVY_FORCE_INLINE vec3_t vec3(f32 x, f32 y, f32 z) {
   return (vec3_t){.x = x, .y = y, .z = z};
 }
 
-IVY_FORCE_INLINE vec3_t vec3_vec2(vec2_t xy, float z) {
+IVY_FORCE_INLINE vec3_t vec3_vec2(vec2_t xy, f32 z) {
   return (vec3_t){.x = xy.x, .y = xy.y, .z = z};
 }
 
-IVY_FORCE_INLINE vec3_t vec3_s(float scalar) {
+IVY_FORCE_INLINE vec3_t vec3_s(f32 scalar) {
   return (vec3_t){.x = scalar, .y = scalar, .z = scalar};
 }
 
@@ -398,30 +394,28 @@ IVY_FORCE_INLINE vec3_t vec3_div(vec3_t a, vec3_t b) {
   return vec3(a.x / b.x, a.y / b.y, a.z / b.z);
 }
 
-IVY_FORCE_INLINE vec3_t vec3_add_s(vec3_t vec, float scalar) {
+IVY_FORCE_INLINE vec3_t vec3_add_s(vec3_t vec, f32 scalar) {
   return vec3_add(vec, vec3_s(scalar));
 }
 
-IVY_FORCE_INLINE vec3_t vec3_sub_s(vec3_t vec, float scalar) {
+IVY_FORCE_INLINE vec3_t vec3_sub_s(vec3_t vec, f32 scalar) {
   return vec3_sub(vec, vec3_s(scalar));
 }
 
-IVY_FORCE_INLINE vec3_t vec3_mul_s(vec3_t vec, float scalar) {
+IVY_FORCE_INLINE vec3_t vec3_mul_s(vec3_t vec, f32 scalar) {
   return vec3_mul(vec, vec3_s(scalar));
 }
 
-IVY_FORCE_INLINE vec3_t vec3_div_s(vec3_t vec, float scalar) {
+IVY_FORCE_INLINE vec3_t vec3_div_s(vec3_t vec, f32 scalar) {
   return vec3_div(vec, vec3_s(scalar));
 }
 
-IVY_FORCE_INLINE float vec3_dot(vec3_t a, vec3_t b) {
+IVY_FORCE_INLINE f32 vec3_dot(vec3_t a, vec3_t b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-IVY_FORCE_INLINE float vec3_len_sq(vec3_t vec) { return vec3_dot(vec, vec); }
-IVY_FORCE_INLINE float vec3_len(vec3_t vec) {
-  return ivy_sqrt(vec3_len_sq(vec));
-}
+IVY_FORCE_INLINE f32 vec3_len_sq(vec3_t vec) { return vec3_dot(vec, vec); }
+IVY_FORCE_INLINE f32 vec3_len(vec3_t vec) { return ivy_sqrt(vec3_len_sq(vec)); }
 
 IVY_FORCE_INLINE b8 vec3_eq(vec3_t a, vec3_t b) {
   return (a.x == b.x && a.y == b.y && a.z == b.z);
@@ -440,7 +434,7 @@ IVY_FORCE_INLINE vec3_t vec3_cross(vec3_t a, vec3_t b) {
               a.x * b.y - a.y * b.x);
 }
 
-IVY_FORCE_INLINE vec3_t vec3_lerp(vec3_t a, vec3_t b, float t) {
+IVY_FORCE_INLINE vec3_t vec3_lerp(vec3_t a, vec3_t b, f32 t) {
   return vec3_add(a, vec3_mul_s(vec3_sub(b, a), t));
 }
 
@@ -448,11 +442,11 @@ IVY_FORCE_INLINE vec3_t vec3_refl(vec3_t vec, vec3_t norm) {
   return vec3_sub(vec, vec3_mul_s(norm, 2.0f * vec3_dot(vec, norm)));
 }
 
-IVY_FORCE_INLINE float vec3_dist_sq(vec3_t a, vec3_t b) {
+IVY_FORCE_INLINE f32 vec3_dist_sq(vec3_t a, vec3_t b) {
   return vec3_len_sq(vec3_sub(a, b));
 }
 
-IVY_FORCE_INLINE float vec3_dist(vec3_t a, vec3_t b) {
+IVY_FORCE_INLINE f32 vec3_dist(vec3_t a, vec3_t b) {
   return vec3_len(vec3_sub(a, b));
 }
 
@@ -462,21 +456,21 @@ IVY_FORCE_INLINE float vec3_dist(vec3_t a, vec3_t b) {
 #define VEC4_ZERO vec4_s(0.0f)
 #define VEC4_ONE vec4_s(1.0f)
 
-IVY_FORCE_INLINE vec4_t vec4(float x, float y, float z, float w) {
+IVY_FORCE_INLINE vec4_t vec4(f32 x, f32 y, f32 z, f32 w) {
 #ifdef IVY_LINMATH_USE_SSE
   return (vec4_t){.sse = _mm_setr_ps(x, y, z, w)};
 #elif defined(IVY_LINMATH_USE_NEON)
-  return (vec4_t){.neon = (float32x4_t){x, y, z, w}};
+  return (vec4_t){.neon = (f3232x4_t){x, y, z, w}};
 #else
   return (vec4_t){.x = x, .y = y, .z = z, .w = w};
 #endif
 }
 
-IVY_FORCE_INLINE vec4_t vec4_vec3(vec3_t xyz, float w) {
+IVY_FORCE_INLINE vec4_t vec4_vec3(vec3_t xyz, f32 w) {
   return vec4(xyz.x, xyz.y, xyz.z, w);
 }
 
-IVY_FORCE_INLINE vec4_t vec4_s(float scalar) {
+IVY_FORCE_INLINE vec4_t vec4_s(f32 scalar) {
 #ifdef IVY_LINMATH_USE_SSE
   return (vec4_t){.sse = _mm_set1_ps(scalar)};
 #elif defined(IVY_LINMATH_USE_NEON)
@@ -526,25 +520,25 @@ IVY_FORCE_INLINE vec4_t vec4_div(vec4_t a, vec4_t b) {
 #endif
 }
 
-IVY_FORCE_INLINE vec4_t vec4_add_s(vec4_t vec, float scalar) {
+IVY_FORCE_INLINE vec4_t vec4_add_s(vec4_t vec, f32 scalar) {
   return vec4_add(vec, vec4_s(scalar));
 }
 
-IVY_FORCE_INLINE vec4_t vec4_sub_s(vec4_t vec, float scalar) {
+IVY_FORCE_INLINE vec4_t vec4_sub_s(vec4_t vec, f32 scalar) {
   return vec4_sub(vec, vec4_s(scalar));
 }
 
-IVY_FORCE_INLINE vec4_t vec4_mul_s(vec4_t vec, float scalar) {
+IVY_FORCE_INLINE vec4_t vec4_mul_s(vec4_t vec, f32 scalar) {
   return vec4_mul(vec, vec4_s(scalar));
 }
 
-IVY_FORCE_INLINE vec4_t vec4_div_s(vec4_t vec, float scalar) {
+IVY_FORCE_INLINE vec4_t vec4_div_s(vec4_t vec, f32 scalar) {
   return vec4_div(vec, vec4_s(scalar));
 }
 
-IVY_FORCE_INLINE float vec4_dot(vec4_t a, vec4_t b) {
+IVY_FORCE_INLINE f32 vec4_dot(vec4_t a, vec4_t b) {
 #ifdef IVY_LINMATH_USE_SSE
-  float out;
+  f32 out;
 
   __m128 sse_out1 = _mm_mul_ps(a.sse, b.sse);
   __m128 sse_out2 = _mm_shuffle_ps(sse_out1, sse_out1, _MM_SHUFFLE(2, 3, 0, 1));
@@ -555,11 +549,11 @@ IVY_FORCE_INLINE float vec4_dot(vec4_t a, vec4_t b) {
 
   return out;
 #elif defined(IVY_LINMATH_USE_NEON)
-  float out;
+  f32 out;
 
-  float32x4_t neon_mul_out = vmulq_f32(a.neon, b.neon);
-  float32x4_t neon_half_add = vpaddq_f32(neon_mul_out, neon_mul_out);
-  float32x4_t neon_full_add = vpaddq_f32(neon_half_add, neon_half_add);
+  f3232x4_t neon_mul_out = vmulq_f32(a.neon, b.neon);
+  f3232x4_t neon_half_add = vpaddq_f32(neon_mul_out, neon_mul_out);
+  f3232x4_t neon_full_add = vpaddq_f32(neon_half_add, neon_half_add);
   out = vgetq_lane_f32(neon_full_add, 0);
 
   return out;
@@ -568,10 +562,8 @@ IVY_FORCE_INLINE float vec4_dot(vec4_t a, vec4_t b) {
 #endif
 }
 
-IVY_FORCE_INLINE float vec4_len_sq(vec4_t vec) { return vec4_dot(vec, vec); }
-IVY_FORCE_INLINE float vec4_len(vec4_t vec) {
-  return ivy_sqrt(vec4_len_sq(vec));
-}
+IVY_FORCE_INLINE f32 vec4_len_sq(vec4_t vec) { return vec4_dot(vec, vec); }
+IVY_FORCE_INLINE f32 vec4_len(vec4_t vec) { return ivy_sqrt(vec4_len_sq(vec)); }
 
 IVY_FORCE_INLINE b8 vec4_eq(vec4_t a, vec4_t b) {
   return (a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w);
@@ -585,15 +577,15 @@ IVY_FORCE_INLINE vec4_t vec4_norm(vec4_t vec) {
   return vec4_div_s(vec, vec4_len(vec));
 }
 
-IVY_FORCE_INLINE vec4_t vec4_lerp(vec4_t a, vec4_t b, float t) {
+IVY_FORCE_INLINE vec4_t vec4_lerp(vec4_t a, vec4_t b, f32 t) {
   return vec4_add(a, vec4_mul_s(vec4_sub(b, a), t));
 }
 
-IVY_FORCE_INLINE float vec4_dist_sq(vec4_t a, vec4_t b) {
+IVY_FORCE_INLINE f32 vec4_dist_sq(vec4_t a, vec4_t b) {
   return vec4_len_sq(vec4_sub(a, b));
 }
 
-IVY_FORCE_INLINE float vec4_dist(vec4_t a, vec4_t b) {
+IVY_FORCE_INLINE f32 vec4_dist(vec4_t a, vec4_t b) {
   return vec4_len(vec4_sub(a, b));
 }
 
@@ -604,7 +596,7 @@ IVY_FORCE_INLINE vec4_t vec4_refl(vec4_t vec, vec4_t norm) {
 /*
  *  mat2 implementation
  */
-IVY_FORCE_INLINE mat2_t mat2(float diagonal) {
+IVY_FORCE_INLINE mat2_t mat2(f32 diagonal) {
   mat2_t out;
 
   out.columns[0] = vec2(diagonal, 0.0f);
@@ -654,7 +646,7 @@ IVY_FORCE_INLINE mat2_t mat2_mul(mat2_t a, mat2_t b) {
   return out;
 }
 
-IVY_FORCE_INLINE mat2_t mat2_mul_s(mat2_t mat, float scalar) {
+IVY_FORCE_INLINE mat2_t mat2_mul_s(mat2_t mat, f32 scalar) {
   mat2_t out = mat2(1.0f);
 
   out.columns[0] = vec2_mul_s(mat.columns[0], scalar);
@@ -663,7 +655,7 @@ IVY_FORCE_INLINE mat2_t mat2_mul_s(mat2_t mat, float scalar) {
   return out;
 }
 
-IVY_FORCE_INLINE mat2_t mat2_div_s(mat2_t mat, float scalar) {
+IVY_FORCE_INLINE mat2_t mat2_div_s(mat2_t mat, f32 scalar) {
   mat2_t out = mat2(1.0f);
 
   out.columns[0] = vec2_div_s(mat.columns[0], scalar);
@@ -672,7 +664,7 @@ IVY_FORCE_INLINE mat2_t mat2_div_s(mat2_t mat, float scalar) {
   return out;
 }
 
-IVY_FORCE_INLINE float mat2_det(mat2_t mat) {
+IVY_FORCE_INLINE f32 mat2_det(mat2_t mat) {
   return mat.elements[0][0] * mat.elements[1][1] -
          mat.elements[0][1] * mat.elements[1][0];
 }
@@ -680,7 +672,7 @@ IVY_FORCE_INLINE float mat2_det(mat2_t mat) {
 IVY_FORCE_INLINE mat2_t mat2_inv(mat2_t mat) {
   mat2_t out;
 
-  float inv_det = 1.0f / mat2_det(mat);
+  f32 inv_det = 1.0f / mat2_det(mat);
   out.elements[0][0] = inv_det * +mat.elements[1][1];
   out.elements[1][1] = inv_det * +mat.elements[0][0];
   out.elements[0][1] = inv_det * -mat.elements[0][1];
@@ -692,7 +684,7 @@ IVY_FORCE_INLINE mat2_t mat2_inv(mat2_t mat) {
 /*
  *  mat3 implementation
  */
-IVY_FORCE_INLINE mat3_t mat3(float diagonal) {
+IVY_FORCE_INLINE mat3_t mat3(f32 diagonal) {
   mat3_t out;
 
   out.columns[0] = vec3(diagonal, 0.0f, 0.0f);
@@ -754,7 +746,7 @@ IVY_FORCE_INLINE mat3_t mat3_mul(mat3_t a, mat3_t b) {
   return out;
 }
 
-IVY_FORCE_INLINE mat3_t mat3_mul_s(mat3_t mat, float scalar) {
+IVY_FORCE_INLINE mat3_t mat3_mul_s(mat3_t mat, f32 scalar) {
   mat3_t out = mat3(1.0f);
 
   out.columns[0] = vec3_mul_s(mat.columns[0], scalar);
@@ -764,7 +756,7 @@ IVY_FORCE_INLINE mat3_t mat3_mul_s(mat3_t mat, float scalar) {
   return out;
 }
 
-IVY_FORCE_INLINE mat3_t mat3_div_s(mat3_t mat, float scalar) {
+IVY_FORCE_INLINE mat3_t mat3_div_s(mat3_t mat, f32 scalar) {
   mat3_t out = mat3(1.0f);
 
   out.columns[0] = vec3_div_s(mat.columns[0], scalar);
@@ -774,7 +766,7 @@ IVY_FORCE_INLINE mat3_t mat3_div_s(mat3_t mat, float scalar) {
   return out;
 }
 
-IVY_FORCE_INLINE float mat3_det(mat3_t mat) {
+IVY_FORCE_INLINE f32 mat3_det(mat3_t mat) {
   mat3_t cross;
   cross.columns[0] = vec3_cross(mat.columns[1], mat.columns[2]);
   cross.columns[1] = vec3_cross(mat.columns[2], mat.columns[0]);
@@ -789,7 +781,7 @@ IVY_FORCE_INLINE mat3_t mat3_inv(mat3_t mat) {
   cross.columns[1] = vec3_cross(mat.columns[2], mat.columns[0]);
   cross.columns[2] = vec3_cross(mat.columns[0], mat.columns[1]);
 
-  float inv_det = 1.0f / vec3_dot(cross.columns[2], mat.columns[2]);
+  f32 inv_det = 1.0f / vec3_dot(cross.columns[2], mat.columns[2]);
 
   mat3_t out;
   out.columns[0] = vec3_mul_s(cross.columns[0], inv_det);
@@ -802,7 +794,7 @@ IVY_FORCE_INLINE mat3_t mat3_inv(mat3_t mat) {
 /*
  *  mat4 implementation
  */
-IVY_FORCE_INLINE mat4_t mat4(float diagonal) {
+IVY_FORCE_INLINE mat4_t mat4(f32 diagonal) {
   mat4_t out;
 
   out.columns[0] = vec4(diagonal, 0.0f, 0.0f, 0.0f);
@@ -821,7 +813,7 @@ IVY_FORCE_INLINE mat4_t mat4_transpose(mat4_t mat) {
   _MM_TRANSPOSE4_PS(out.columns[0].sse, out.columns[1].sse, out.columns[2].sse,
                     out.columns[3].sse);
 #elif defined(IVY_LINMATH_USE_NEON)
-  float32x4x4_t transposed = vld4q_f32((float *)mat.columns);
+  f3232x4x4_t transposed = vld4q_f32((f32 *)mat.columns);
   out.columns[0].neon = transposed.val[0];
   out.columns[1].neon = transposed.val[1];
   out.columns[2].neon = transposed.val[2];
@@ -920,7 +912,7 @@ IVY_FORCE_INLINE mat4_t mat4_mul(mat4_t a, mat4_t b) {
   return out;
 }
 
-IVY_FORCE_INLINE mat4_t mat4_mul_s(mat4_t mat, float scalar) {
+IVY_FORCE_INLINE mat4_t mat4_mul_s(mat4_t mat, f32 scalar) {
   mat4_t out;
 
 #ifdef IVY_LINMATH_USE_SSE
@@ -939,7 +931,7 @@ IVY_FORCE_INLINE mat4_t mat4_mul_s(mat4_t mat, float scalar) {
   return out;
 }
 
-IVY_FORCE_INLINE mat4_t mat4_div_s(mat4_t mat, float scalar) {
+IVY_FORCE_INLINE mat4_t mat4_div_s(mat4_t mat, f32 scalar) {
   mat4_t out;
 #ifdef IVY_LINMATH_USE_SSE
   __m128 scalar_sse = vec4_s(scalar).sse;
@@ -958,7 +950,7 @@ IVY_FORCE_INLINE mat4_t mat4_div_s(mat4_t mat, float scalar) {
 }
 
 // some type of magic, copied from Handmade Math
-IVY_FORCE_INLINE float mat4_det(mat4_t mat) {
+IVY_FORCE_INLINE f32 mat4_det(mat4_t mat) {
   vec3_t c01 = vec3_cross(mat.columns[0].xyz, mat.columns[1].xyz);
   vec3_t c23 = vec3_cross(mat.columns[2].xyz, mat.columns[3].xyz);
 
@@ -978,7 +970,7 @@ IVY_FORCE_INLINE mat4_t mat4_inv(mat4_t mat) {
   vec3_t b32 = vec3_sub(vec3_mul_s(mat.columns[2].xyz, mat.columns[3].w),
                         vec3_mul_s(mat.columns[3].xyz, mat.columns[2].w));
 
-  float InvDeterminant = 1.0f / (vec3_dot(c01, b32) + vec3_dot(c23, b10));
+  f32 InvDeterminant = 1.0f / (vec3_dot(c01, b32) + vec3_dot(c23, b10));
   c01 = vec3_mul_s(c01, InvDeterminant);
   c23 = vec3_mul_s(c23, InvDeterminant);
   b10 = vec3_mul_s(b10, InvDeterminant);
@@ -1017,14 +1009,14 @@ IVY_FORCE_INLINE mat4_t mat4_scale(vec3_t scale) {
   return out;
 }
 
-IVY_FORCE_INLINE mat4_t mat4_rotate(float angle, vec3_t axis) {
+IVY_FORCE_INLINE mat4_t mat4_rotate(f32 angle, vec3_t axis) {
   mat4_t out = mat4(1.0f);
 
   axis = vec3_norm(axis);
 
-  float sin_theta = ivy_sin(angle);
-  float cos_theta = ivy_cos(angle);
-  float cos_value = 1.0f - cos_theta;
+  f32 sin_theta = ivy_sin(angle);
+  f32 cos_theta = ivy_cos(angle);
+  f32 cos_value = 1.0f - cos_theta;
 
   out.elements[0][0] = (axis.x * axis.x * cos_value) + cos_theta;
   out.elements[1][1] = (axis.y * axis.y * cos_value) + cos_theta;
