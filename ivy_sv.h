@@ -1,6 +1,6 @@
 /*
   ----- Ivy String View -----
-  Version: 1.4.0
+  Version: 1.5.0
   License: MIT-0
 This stb-style header has a feature-full string view for the ivystd.
   Use IVY_IMPL macro for implementation
@@ -20,8 +20,7 @@ This stb-style header has a feature-full string view for the ivystd.
   sv is the value of the sv (so not a pointer), i is the name of the index, and
   offset has the offset from the initial position (from the start for the normal
   variation, and from the end for the reverse variation).
-
-  To make a string view from a string literal / c string, you use the sv func:
+To make a string view from a string literal / c string, you use the sv func:
   string_view_t sv = sv("Hello, World!");
 
   And from any string with a custom length:
@@ -61,20 +60,6 @@ This stb-style header has a feature-full string view for the ivystd.
   is_type function determines what ISN'T a delimiter. So you can use isalpha to
   chop until we reach a non-alphabetic character.
 
-  ~ sv_to_int(sv) : Returns a string view converted into a 64-bit
-  signed integer.
-
-  ~ sv_to_uint(sv) : Returns a string view converted into a 64-bit
-  unsigned integer.
-
-  ~ sv_from_int(alloc, n) : Returns a 64-bit signed integer n converted into a
-  string view, allocated with the alloc. It has a secret null terminator at the
-  end.
-
-  ~ sv_from_uint(alloc, n) : Returns a 64-bit unsigned integer n converted into
-  a string view, allocated with the alloc. It has a secret null terminator at
-  the end.
-
   ----- Credits -----
   The initial implementation was a copied from Tsoding's video, "C Strings are
   Terrible!" (https://www.youtube.com/watch?v=y8PLpDgZc0E). You can technically
@@ -85,16 +70,14 @@ This stb-style header has a feature-full string view for the ivystd.
 #define IVY_SV_H
 
 #define IVY_SV_MAJOR 1
-#define IVY_SV_MINOR 4
+#define IVY_SV_MINOR 5
 #define IVY_SV_FIX 0
 
 #include <ctype.h>
-#include <math.h>
 #include <string.h>
 
 #include "ivy_allocator.h"
 #include "ivy_core.h"
-#include "ivy_math.h"
 
 typedef struct {
   const c8 *data;
@@ -202,16 +185,6 @@ string_view_t sv_chop_by_type(string_view_t *sv, int (*is_type)(int c));
 // is_type is what ISN'T a delimiter.
 string_view_t sv_chop_by_type_rev(string_view_t *sv, int (*is_type)(int c));
 
-i64 sv_to_int(string_view_t sv);
-u64 sv_to_uint(string_view_t sv);
-float sv_to_float_d(string_view_t sv);
-
-// All of these functions have a secret null terminator
-string_view_t sv_from_int(allocator_t alloc, i64 n);
-string_view_t sv_from_uint(allocator_t alloc, u64 n);
-string_view_t sv_from_float_d(allocator_t alloc, float n, u64 precision);
-
-#define IVY_IMPL
 #ifdef IVY_IMPL
 
 string_view_t sv_chop_by_delimiter(string_view_t *sv, c8 delimiter) {
@@ -301,188 +274,6 @@ string_view_t sv_chop_by_type_rev(string_view_t *sv, int (*is_type)(int c)) {
   out = *sv;
   *sv = sv_chop_left(*sv, sv->length);
   return out;
-}
-
-#define I64_MAX_DIV_10 (I64_MAX / 10)
-
-i64 sv_to_int(string_view_t sv) {
-  IVY_ASSERT(sv.data != NULL && sv.length > 0,
-             "String view can't be null or empty!");
-
-  b8 is_negative = (sv.data[0] == '-');
-  sv = sv_chop_left(sv, is_negative);
-
-  i64 out = 0;
-  SV_FOREACH(sv, i, 0) {
-    c8 c = sv.data[i];
-
-    IVY_ASSERT(isdigit(c),
-               "String view can't contain a nonnumerical character, or a "
-               "negative in the wrong place");
-
-    i64 digit = c - '0';
-
-    IVY_ASSERT(out <= I64_MAX_DIV_10 + (i64)is_negative,
-               "Integer would overflow");
-
-    if (out == I64_MAX_DIV_10) {
-      IVY_ASSERT(digit <= 7 + is_negative, "Integer would overflow");
-    }
-
-    out = (out * 10) + digit;
-  }
-
-  return (is_negative ? -out : out);
-}
-
-#define U64_MAX_DIV_10 (U64_MAX / 10)
-
-u64 sv_to_uint(string_view_t sv) {
-  IVY_ASSERT(sv.data != NULL && sv.length > 0,
-             "String view can't be null or empty!");
-
-  u64 out = 0;
-  SV_FOREACH(sv, i, 0) {
-    c8 c = sv.data[i];
-
-    IVY_ASSERT(isdigit(c),
-               "String view can't contain a nonnumerical character, or a "
-               "negative");
-
-    i64 digit = sv.data[i] - '0';
-
-    IVY_ASSERT(out <= U64_MAX_DIV_10, "Integer would overflow");
-
-    if (out == U64_MAX_DIV_10) {
-      IVY_ASSERT(digit <= 5, "Integer would overflow");
-    }
-
-    out = (out * 10) + digit;
-  }
-
-  return out;
-}
-
-string_view_t sv_from_int(allocator_t alloc, i64 n) {
-  b8 is_negative = false;
-  u64 out_n;
-  if (n < 0) {
-    is_negative = true;
-    out_n = -(u64)n;
-  } else {
-    out_n = (u64)n;
-  }
-
-  i64 length = 0;
-  u64 temp = out_n;
-  while (temp > 0) {
-    length++;
-    temp /= 10;
-  }
-  length = (length == 0 ? 0 : length - 1) + is_negative;
-
-  c8 *buffer = ivy_alloc(alloc, length + 2);
-
-  if (is_negative) {
-    buffer[0] = '-';
-  }
-
-  for (i64 i = length - is_negative; i >= 0; i--) {
-    *(buffer + i + is_negative) = (out_n % 10) + '0';
-    out_n /= 10;
-  }
-
-  buffer[length + 1] = '\0';
-
-  return (string_view_t){
-      .data = buffer,
-      .length = length + 1,
-  };
-}
-
-string_view_t sv_from_uint(allocator_t alloc, u64 n) {
-  i64 length = 0;
-  u64 temp = n;
-  while (temp > 0) {
-    length++;
-    temp /= 10;
-  }
-  length = (length == 0 ? 0 : length - 1);
-
-  c8 *buffer = ivy_alloc(alloc, length + 2);
-
-  for (i64 i = length; i >= 0; i--) {
-    *(buffer + i) = (n % 10) + '0';
-    n /= 10;
-  }
-
-  buffer[length + 1] = '\0';
-
-  return (string_view_t){
-      .data = buffer,
-      .length = length + 1,
-  };
-}
-
-float sv_to_float_d(string_view_t sv) {}
-
-string_view_t sv_from_float_d(allocator_t alloc, float n, u64 precision) {
-  IVY_ASSERT(precision <= 9, "Precision can't be bigger than 9");
-  float_bits bits = ivy_get_float_bits(n);
-
-  if (bits.exponent == 0xFF) {
-    c8 *buffer = ivy_alloc(alloc, 4 + bits.sign);
-    if (bits.mantissa != 0) {
-      memcpy(buffer, "NAN", 4 * sizeof(c8));
-    } else {
-      if (bits.sign) {
-        memcpy(buffer, "-INF", 5 * sizeof(c8));
-
-      } else {
-        memcpy(buffer, "INF", 4 * sizeof(c8));
-      }
-    }
-
-    return (string_view_t){
-        .data = buffer,
-        .length = 3 + bits.sign,
-    };
-  }
-
-  if (bits.exponent == 0 && bits.mantissa == 0) {
-    c8 *buffer = ivy_alloc(alloc, 4 + bits.sign);
-
-    if (bits.sign) {
-      *buffer++ = '-';
-    }
-
-    memcpy(buffer, "0.0", 4 * sizeof(c8));
-
-    return (string_view_t){
-        .data = buffer - bits.sign,
-        .length = 3 + bits.sign,
-    };
-  }
-
-  u32 M;
-  i32 E;
-  if (bits.exponent == 0) {
-    M = bits.mantissa;
-    E = -149;
-  } else {
-    M = (1 << 23) | bits.mantissa;
-    E = (i32)bits.exponent - 150;
-  }
-
-  u64 scaled = M * ivy_pow_u64(5, precision);
-  u64 w;
-  i32 s = E + precision;
-  if (s >= 0) {
-    w = scaled << s;
-  } else {
-    u32 sh = (u32)(-s);
-    w = (scaled + (1ull << (sh - 1u))) >> sh;
-  }
 }
 
 #endif

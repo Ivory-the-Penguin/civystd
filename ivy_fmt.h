@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.3.2
+  Version: 1.4.0
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -13,8 +13,8 @@
 #define IVY_FMT_H
 
 #define IVY_FMT_MAJOR 1
-#define IVY_FMT_MINOR 3
-#define IVY_FMT_FIX 1
+#define IVY_FMT_MINOR 4
+#define IVY_FMT_FIX 0
 
 #include "ivy_allocator.h"
 #include "ivy_sb.h"
@@ -48,6 +48,12 @@ string_view_t fmt_format(allocator_t alloc, string_view_t fmt, ...);
 void ivy_print(const char *fmt, ...);
 
 void ivy_print_file(FILE *file, const char *fmt, ...);
+
+i64 fmt_parse_i64(string_view_t sv);
+u64 fmt_parse_u64(string_view_t sv);
+
+string_view_t fmt_i64(allocator_t alloc, i64 n);
+string_view_t fmt_u64(allocator_t alloc, u64 n);
 
 #ifdef IVY_IMPL
 
@@ -199,7 +205,7 @@ IVY_FORCE_INLINE void _fmt_int(va_list args, string_builder_t *buffer,
     }
   }
 
-  string_view_t n_sv = sv_from_uint(scratch, n);
+  string_view_t n_sv = fmt_u64(scratch, n);
 
   sb_append_sv(buffer, n_sv);
 }
@@ -249,6 +255,127 @@ IVY_CONSTRUCTOR static void fmt_add_builtins() {
   fmt_register(sv("s"), _fmt_sv);
   fmt_register(sv("fg"), _fmt_color);
   fmt_register(sv("fmt"), _fmt_fmt);
+}
+
+#define I64_MAX_DIV_10 (I64_MAX / 10)
+
+i64 fmt_parse_i64(string_view_t sv) {
+  IVY_ASSERT(sv.data != NULL && sv.length > 0,
+             "String view can't be null or empty!");
+
+  b8 is_negative = (sv.data[0] == '-');
+  sv = sv_chop_left(sv, is_negative);
+
+  i64 out = 0;
+  SV_FOREACH(sv, i, 0) {
+    c8 c = sv.data[i];
+
+    IVY_ASSERT(isdigit(c),
+               "String view can't contain a nonnumerical character, or a "
+               "negative in the wrong place");
+
+    i64 digit = c - '0';
+
+    IVY_ASSERT(out <= I64_MAX_DIV_10 + (i64)is_negative,
+               "Integer would overflow");
+
+    if (out == I64_MAX_DIV_10) {
+      IVY_ASSERT(digit <= 7 + is_negative, "Integer would overflow");
+    }
+
+    out = (out * 10) + digit;
+  }
+
+  return (is_negative ? -out : out);
+}
+
+#define U64_MAX_DIV_10 (U64_MAX / 10)
+
+u64 fmt_parse_u64(string_view_t sv) {
+  IVY_ASSERT(sv.data != NULL && sv.length > 0,
+             "String view can't be null or empty!");
+
+  u64 out = 0;
+  SV_FOREACH(sv, i, 0) {
+    c8 c = sv.data[i];
+
+    IVY_ASSERT(isdigit(c),
+               "String view can't contain a nonnumerical character, or a "
+               "negative");
+
+    i64 digit = sv.data[i] - '0';
+
+    IVY_ASSERT(out <= U64_MAX_DIV_10, "Integer would overflow");
+
+    if (out == U64_MAX_DIV_10) {
+      IVY_ASSERT(digit <= 5, "Integer would overflow");
+    }
+
+    out = (out * 10) + digit;
+  }
+
+  return out;
+}
+
+string_view_t fmt_i64(allocator_t alloc, i64 n) {
+  b8 is_negative = false;
+  u64 out_n;
+  if (n < 0) {
+    is_negative = true;
+    out_n = -(u64)n;
+  } else {
+    out_n = (u64)n;
+  }
+
+  i64 length = 0;
+  u64 temp = out_n;
+  while (temp > 0) {
+    length++;
+    temp /= 10;
+  }
+  length = (length == 0 ? 0 : length - 1) + is_negative;
+
+  c8 *buffer = ivy_alloc(alloc, length + 2);
+
+  if (is_negative) {
+    buffer[0] = '-';
+  }
+
+  for (i64 i = length - is_negative; i >= 0; i--) {
+    *(buffer + i + is_negative) = (out_n % 10) + '0';
+    out_n /= 10;
+  }
+
+  buffer[length + 1] = '\0';
+
+  return (string_view_t){
+      .data = buffer,
+      .length = length + 1,
+  };
+}
+
+string_view_t fmt_u64(allocator_t alloc, u64 n) {
+  i64 length = 0;
+  u64 temp = n;
+  while (temp > 0) {
+    length++;
+    temp /= 10;
+  }
+  length = (length == 0 ? 0 : length - 1);
+
+  c8 *buffer = ivy_alloc(alloc, length + 2);
+
+  for (i64 i = length; i >= 0; i--) {
+    *(buffer + i) = (n % 10) + '0';
+    n /= 10;
+  }
+
+  buffer[length + 1] = '\0';
+
+  return (string_view_t){
+      .data = buffer,
+      .length = length + 1,
+  };
 }
 
 #endif
