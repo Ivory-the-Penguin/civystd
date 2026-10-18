@@ -118,7 +118,7 @@ TEST_CASE(math_lerp) {
 }
 
 TEST_CASE(math_trig) {
-  for (f32 i = -IVY_2PI; i < IVY_2PI * 2; i += 0.001) {
+  for (f32 i = -IVY_2PI; i < IVY_2PI * 2; i += 0.0001) {
     TEST_EXPECT_FLOAT(ivy_sin(i), sinf(i), 0.00001f);
     TEST_EXPECT_FLOAT(ivy_cos(i), cosf(i), 0.00001f);
 
