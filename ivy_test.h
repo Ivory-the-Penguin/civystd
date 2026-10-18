@@ -1,6 +1,6 @@
 /*
   ----- Ivy Test ------
-  Version: 1.2.3
+  Version: 1.3.0
   License: MIT-0
 
   This stb-style header has testing for the ivystd.
@@ -12,6 +12,7 @@
 #include "ivy_core.h"
 #include "ivy_fb.h"
 #include "ivy_fmt.h"
+#include "ivy_math.h"
 
 extern __thread u64 tests_passed;
 extern __thread u64 total_tests;
@@ -78,6 +79,10 @@ extern __thread allocator_t _scratch_alloc;
   TEST_ASSERT_FMT(a == b,                                                      \
                   "Check for {cs} failed: Expected " fmt ", got " fmt ".", #a, \
                   b, a)
+
+#define TEST_EXPECT_FLOAT(a, b, precision)              \
+  TEST_ASSERT_FMT(IVY_COMPARE_DECIMAL(a, b, precision), \
+                  "Check for {cs} failed: Expected {f}, got {f}.", #a, b, a)
 
 #define TEST_OK() \
   do {            \

@@ -86,6 +86,17 @@ TEST_CASE(math_clamp) {
   TEST_OK();
 }
 
+TEST_CASE(math_lerp) {
+  TEST_EXPECT_FLOAT(IVY_LERP(0.0f, 0.0f, 0.0f), 0.0f, 0.000001);
+
+  TEST_EXPECT_FLOAT(IVY_LERP(0.0f, 1.0f, 0.0f), 0.0f, 0.000001);
+  TEST_EXPECT_FLOAT(IVY_LERP(0.0f, 1.0f, 1.0f), 1.0f, 0.000001);
+
+  TEST_EXPECT_FLOAT(IVY_LERP(0.0f, 1.0f, 0.5f), 0.5f, 0.000001);
+
+  TEST_OK();
+}
+
 TEST_SUITE(math_suite) {
   TEST_RUN(math_abs_signed);
   TEST_RUN(math_abs_unsigned);
