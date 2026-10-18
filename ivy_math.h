@@ -1,6 +1,6 @@
 /*
   ----- Ivy Math -----
-  Version: 0.7.1
+  Version: 0.8.0
   License: MIT-0
 
   This header only library has some useful maths functions for the ivystd.
@@ -112,7 +112,7 @@ IVY_FORCE_INLINE f32 ivy_cos(f32 x) { return ivy_sin(x + IVY_HALF_PI); }
 IVY_FORCE_INLINE f32 ivy_tan(f32 x) { return ivy_sin(x) / ivy_cos(x); }
 
 IVY_FORCE_INLINE f32 ivy_inv_sqrt(f32 x) {
-  i64 i;
+  i32 i;
   f32 x2, y;
   const f32 threehalfs = 1.5f;
 
@@ -122,7 +122,7 @@ IVY_FORCE_INLINE f32 ivy_inv_sqrt(f32 x) {
   i = 0x5f3759df - (i >> 1);
   memcpy(&y, &i, sizeof(y));
   y = y * (threehalfs - (x2 * y * y));
-
+  y = y * (threehalfs - (x2 * y * y));
   y = y * (threehalfs - (x2 * y * y));
 
   return y;
