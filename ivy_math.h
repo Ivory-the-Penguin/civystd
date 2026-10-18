@@ -1,6 +1,6 @@
 /*
   ----- Ivy Math -----
-  Version: 0.8.0
+  Version: 0.9.0
   License: MIT-0
 
   This header only library has some useful maths functions for the ivystd.
@@ -148,23 +148,6 @@ IVY_FORCE_INLINE f32 ivy_pow(f32 x, i32 exp) {
   }
 
   return out;
-}
-
-typedef struct {
-  u32 sign;
-  u32 exponent;
-  u32 mantissa;
-} f32_bits;
-
-f32_bits ivy_get_f32_bits(f32 n) {
-  u32 bits;
-  memcpy(&bits, &n, sizeof(n));
-
-  return (f32_bits){
-      .sign = bits >> 31,
-      .exponent = (bits >> 23) & 0xFF,
-      .mantissa = bits & 0x7FFFFF,
-  };
 }
 
 #endif
