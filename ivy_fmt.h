@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.5.0
+  Version: 1.5.1
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -12,11 +12,12 @@
 #ifndef IVY_FMT_H
 #define IVY_FMT_H
 
-#include <stdio.h>
-#include <string.h>
 #define IVY_FMT_MAJOR 1
 #define IVY_FMT_MINOR 5
-#define IVY_FMT_FIX 0
+#define IVY_FMT_FIX 1
+
+#include <stdio.h>
+#include <string.h>
 
 #include "ivy_allocator.h"
 #include "ivy_sb.h"
@@ -385,12 +386,10 @@ string_view_t fmt_u64(allocator_t alloc, u64 n) {
 f32 fmt_parse_f32(string_view_t sv) {
   f32 out;
 
-  arena_clear(&scratch_arena);
-
   char *c_str = ivy_alloc(scratch_alloc, sizeof(c8) * (sv.length + 1));
   memcpy(c_str, sv.data, sv.length);
 
-  c_str[sv.length + 1] = '\0';
+  c_str[sv.length] = '\0';
 
   sscanf(c_str, "%f", &out);
 
