@@ -1,6 +1,6 @@
 /*
   ----- Ivy Test ------
-  Version: 1.3.1
+  Version: 1.4.0
   License: MIT-0
 
   This stb-style header has testing for the ivystd.
@@ -24,7 +24,6 @@ extern IVY_THREAD_LOCAL allocator_t _scratch_alloc;
 #define TEST_CASE_FMT "[ " ANSI_BOLD "{cs}" ANSI_RESET " ] {cs}\n"
 #define TEST_CASE_ASSERT_FMT "\tAssert failed! {cs}\n"
 
-#define TEST_CASE_RUNNING ANSI_COLOR_YELLOW "RUNNING" ANSI_RESET
 #define TEST_CASE_PASSED ANSI_COLOR_GREEN ANSI_BOLD "PASSED" ANSI_RESET
 #define TEST_CASE_FAILED ANSI_COLOR_RED ANSI_BOLD "FAILED" ANSI_RESET
 
@@ -40,7 +39,6 @@ extern IVY_THREAD_LOCAL allocator_t _scratch_alloc;
   do {                                                   \
     test_msg = NULL;                                     \
     total_tests++;                                       \
-    ivy_print(TEST_CASE_FMT, TEST_CASE_RUNNING, #name);  \
     b8 result = (name)();                                \
     if (result) {                                        \
       ivy_print(TEST_CASE_FMT, TEST_CASE_PASSED, #name); \
