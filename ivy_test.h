@@ -1,6 +1,6 @@
 /*
   ----- Ivy Test ------
-  Version: 1.5.0
+  Version: 1.6.0
   License: MIT-0
 
   This stb-style header has testing for the ivystd.
@@ -82,6 +82,10 @@ extern IVY_THREAD_LOCAL allocator_t _scratch_alloc;
 #define TEST_EXPECT_FLOAT(a, b, precision)              \
   TEST_ASSERT_FMT(IVY_COMPARE_DECIMAL(a, b, precision), \
                   "Check for {cs} failed: Expected {f}, got {f}.", #a, b, a)
+
+#define TEST_EXPECT_SV(a, b)             \
+  TEST_ASSERT_FMT(sv_compare(a, b) == 0, \
+                  "Check for {cs} failed: Expected {s}, got {s}", #a, b, a)
 
 #define TEST_OK() \
   do {            \
