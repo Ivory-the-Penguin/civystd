@@ -32,9 +32,9 @@ To make a string view from a string literal / c string, you use the sv func:
   All of the builtin string view functions start with a sv_ prefix. We have the
   following functions:
 
-  ~ sv_compare(a, b) : Compares a and b lexicographically
+  ~ sv_compare(a, b) : Compares a and b lexicographically.
 
-  ~ sv_has_prefix(sv, prefix) : Check if the sv has a prefix of prefix
+  ~ sv_has_prefix(sv, prefix) : Check if the sv has a prefix of prefix.
 
   ~ sv_chop_left(sv, n) : Returns sv with the left side chopped by n chars.
 
@@ -45,8 +45,9 @@ To make a string view from a string literal / c string, you use the sv func:
   ~ sv_trim_right(sv) : Returns sv with the right side trimmed of whitespaces.
 
   ~ sv_trim(sv) : Returns sv with both sides trimmed of whitespaces.
-
-  ~ sv_combine(alloc, a, b) : Returns a and b concatenated, allocated with alloc
+.
+  ~ sv_combine(alloc, a, b) : Returns a and b concatenated. Allocated with
+alloc.
 
   ~ sv_chop_by_delimiter(*sv, delimiter) : Returns a string view which was taken
   from the start of sv to the delimiter, and modifies sv to be right afterwards
