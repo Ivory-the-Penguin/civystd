@@ -1,6 +1,6 @@
 /*
   ----- Ivy Linmath -----
-  Version: 1.1.0
+  Version: 1.2.0
   License: MIT-0
 
   This is a header only library for linear algebra in the ivystd.
@@ -1029,11 +1029,11 @@ IVY_FORCE_INLINE mat4_t mat4_rotate(f32 angle, vec3_t axis) {
   return out;
 }
 
-IVY_FORCE_INLINE mat4_t mat4_perspective_zo(float fov, float aspect_ratio,
-                                            float near, float far) {
+IVY_FORCE_INLINE mat4_t mat4_perspective_zo(f32 fov, f32 aspect_ratio, f32 near,
+                                            f32 far) {
   mat4_t out = mat4(0.0f);
 
-  float cotangent = 1.0f / ivy_tan(fov / 2.0f);
+  f32 cotangent = 1.0f / ivy_tan(fov / 2.0f);
   out.elements[0][0] = cotangent / aspect_ratio;
   out.elements[1][1] = cotangent;
   out.elements[2][3] = -1.0f;
@@ -1044,17 +1044,49 @@ IVY_FORCE_INLINE mat4_t mat4_perspective_zo(float fov, float aspect_ratio,
   return out;
 }
 
-IVY_FORCE_INLINE mat4_t mat4_perspective_no(float fov, float aspect_ratio,
-                                            float near, float far) {
+IVY_FORCE_INLINE mat4_t mat4_perspective_no(f32 fov, f32 aspect_ratio, f32 near,
+                                            f32 far) {
   mat4_t out = mat4(0.0f);
 
-  float cotangent = 1.0f / ivy_tan(fov / 2.0f);
+  f32 cotangent = 1.0f / ivy_tan(fov / 2.0f);
   out.elements[0][0] = cotangent / aspect_ratio;
   out.elements[1][1] = cotangent;
   out.elements[2][3] = -1.0f;
 
   out.elements[2][2] = (near + far) / (near - far);
   out.elements[3][2] = (2.0f * near * far) / (near - far);
+
+  return out;
+}
+
+IVY_FORCE_INLINE mat4_t mat4_orphographic_no(f32 left, f32 right, f32 bottom,
+                                             f32 top, f32 near, f32 far) {
+  mat4_t out = mat4(0.0f);
+
+  out.elements[0][0] = 2.0f / (right - left);
+  out.elements[1][1] = 2.0f / (top - bottom);
+  out.elements[2][2] = 2.0f / (near - far);
+  out.elements[3][3] = 1.0f;
+
+  out.elements[3][0] = (left + right) / (left - right);
+  out.elements[3][1] = (bottom + top) / (bottom - top);
+  out.elements[3][2] = (near + far) / (near - far);
+
+  return out;
+}
+
+IVY_FORCE_INLINE mat4_t mat4_orphographic_zo(f32 left, f32 right, f32 bottom,
+                                             f32 top, f32 near, f32 far) {
+  mat4_t out = mat4(0.0f);
+
+  out.elements[0][0] = 2.0f / (right - left);
+  out.elements[1][1] = 2.0f / (top - bottom);
+  out.elements[2][2] = 2.0f / (near - far);
+  out.elements[3][3] = 1.0f;
+
+  out.elements[3][0] = (left + right) / (left - right);
+  out.elements[3][1] = (bottom + top) / (bottom - top);
+  out.elements[3][2] = (near) / (near - far);
 
   return out;
 }
