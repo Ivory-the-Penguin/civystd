@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.9.0
+  Version: 1.9.1
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -173,8 +173,8 @@ IVY_FORCE_INLINE void _fmt_c_string(va_list args, string_builder_t *buffer,
   sb_append_sv(buffer, sv(str));
 }
 
-IVY_FORCE_INLINE void _fmt_int(va_list args, string_builder_t *buffer,
-                               string_view_t flags, allocator_t scratch) {
+IVY_FORCE_INLINE void _fmt_integer(va_list args, string_builder_t *buffer,
+                                   string_view_t flags, allocator_t scratch) {
   b8 is_unsigned = false;
   b8 is_long = false;
   SV_FOREACH(flags, i, 0) {
@@ -217,8 +217,9 @@ IVY_FORCE_INLINE void _fmt_int(va_list args, string_builder_t *buffer,
   sb_append_sv(buffer, n_sv);
 }
 
-IVY_FORCE_INLINE void _fmt_sv(va_list args, string_builder_t *buffer,
-                              string_view_t flags, allocator_t scratch) {
+IVY_FORCE_INLINE void _fmt_string_view(va_list args, string_builder_t *buffer,
+                                       string_view_t flags,
+                                       allocator_t scratch) {
   string_view_t str = va_arg(args, string_view_t);
   sb_append_sv(buffer, str);
 }
@@ -252,27 +253,27 @@ IVY_FORCE_INLINE void _fmt_fmt(va_list args, string_builder_t *buffer,
   sb_append_sv(buffer, _fmt_raw(scratch, fmt, args));
 }
 
-IVY_FORCE_INLINE void _fmt_f32(va_list args, string_builder_t *buffer,
-                               string_view_t flags, allocator_t scratch) {
+IVY_FORCE_INLINE void _fmt_float(va_list args, string_builder_t *buffer,
+                                 string_view_t flags, allocator_t scratch) {
   string_view_t f32_sv = fmt_f32(scratch, va_arg(args, double));
   sb_append_sv(buffer, f32_sv);
 }
 
-IVY_FORCE_INLINE void _fmt_v2(va_list args, string_builder_t *buffer,
-                              string_view_t flags, allocator_t scratch) {
+IVY_FORCE_INLINE void _fmt_vec2(va_list args, string_builder_t *buffer,
+                                string_view_t flags, allocator_t scratch) {
   vec2_t vec = va_arg(args, vec2_t);
   sb_append_sv(buffer, fmt_format(scratch, sv("{{{f}, {f}}}"), vec.x, vec.y));
 }
 
-IVY_FORCE_INLINE void _fmt_v3(va_list args, string_builder_t *buffer,
-                              string_view_t flags, allocator_t scratch) {
+IVY_FORCE_INLINE void _fmt_vec3(va_list args, string_builder_t *buffer,
+                                string_view_t flags, allocator_t scratch) {
   vec3_t vec = va_arg(args, vec3_t);
   sb_append_sv(buffer, fmt_format(scratch, sv("{{{f}, {f}, {f}}}"), vec.x,
                                   vec.y, vec.z));
 }
 
-IVY_FORCE_INLINE void _fmt_v4(va_list args, string_builder_t *buffer,
-                              string_view_t flags, allocator_t scratch) {
+IVY_FORCE_INLINE void _fmt_vec4(va_list args, string_builder_t *buffer,
+                                string_view_t flags, allocator_t scratch) {
   vec4_t vec = va_arg(args, vec4_t);
   sb_append_sv(buffer, fmt_format(scratch, sv("{{{f}, {f}, {f}, {f}}}"), vec.x,
                                   vec.y, vec.z, vec.w));
@@ -290,16 +291,16 @@ IVY_FORCE_INLINE void _fmt_boolean(va_list args, string_builder_t *buffer,
 
 IVY_CONSTRUCTOR static void fmt_add_builtins() {
   fmt_register(sv("cs"), _fmt_c_string);
-  fmt_register(sv("i"), _fmt_int);
-  fmt_register(sv("s"), _fmt_sv);
-  fmt_register(sv("f"), _fmt_f32);
+  fmt_register(sv("i"), _fmt_integer);
+  fmt_register(sv("s"), _fmt_string_view);
+  fmt_register(sv("f"), _fmt_float);
   fmt_register(sv("fg"), _fmt_color);
   fmt_register(sv("fmt"), _fmt_fmt);
   fmt_register(sv("b"), _fmt_boolean);
 
-  fmt_register(sv("v2"), _fmt_v2);
-  fmt_register(sv("v3"), _fmt_v3);
-  fmt_register(sv("v4"), _fmt_v4);
+  fmt_register(sv("v2"), _fmt_vec2);
+  fmt_register(sv("v3"), _fmt_vec3);
+  fmt_register(sv("v4"), _fmt_vec4);
 }
 
 #define I64_MAX_DIV_10 (I64_MAX / 10)
