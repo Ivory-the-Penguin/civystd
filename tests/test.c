@@ -5,6 +5,6 @@
 #include "./test_math.c"
 
 i32 main(void) {
-  TEST_SUITE_RUN(core_suite);
-  TEST_SUITE_RUN(math_suite);
+  TEST_SUITE_RUN(core_test_suite);
+  TEST_SUITE_RUN(math_test_suite);
 }

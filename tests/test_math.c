@@ -3,7 +3,7 @@
 #include "../ivy_math.h"
 #include "../ivy_test.h"
 
-TEST_CASE(math_abs) {
+TEST_CASE(math_test_abs) {
   TEST_EXPECT(IVY_ABS(123), 123, "{i}");
   TEST_EXPECT(IVY_ABS(-200), 200, "{i}");
 
@@ -27,7 +27,7 @@ TEST_CASE(math_abs) {
   TEST_OK();
 }
 
-TEST_CASE(math_min) {
+TEST_CASE(math_test_min) {
   TEST_EXPECT(IVY_MIN(0, 0), 0, "{i}");
   TEST_EXPECT(IVY_MIN(0, 100), 0, "{i}");
   TEST_EXPECT(IVY_MIN(99, 100), 99, "{i}");
@@ -41,7 +41,7 @@ TEST_CASE(math_min) {
   TEST_OK();
 }
 
-TEST_CASE(math_max) {
+TEST_CASE(math_test_max) {
   TEST_EXPECT(IVY_MAX(0, 0), 0, "{i}");
   TEST_EXPECT(IVY_MAX(0, 100), 100, "{i}");
   TEST_EXPECT(IVY_MAX(99, 100), 100, "{i}");
@@ -55,7 +55,7 @@ TEST_CASE(math_max) {
   TEST_OK();
 }
 
-TEST_CASE(math_clamp) {
+TEST_CASE(math_test_clamp) {
   TEST_EXPECT(IVY_CLAMP(0, 0, 0), 0, "{i}");
 
   TEST_EXPECT(IVY_CLAMP(250, 100, 500), 250, "{i}");
@@ -83,7 +83,7 @@ TEST_CASE(math_clamp) {
   TEST_OK();
 }
 
-TEST_CASE(math_lerp) {
+TEST_CASE(math_test_lerp) {
   TEST_EXPECT_FLOAT(IVY_LERP(0.0, 0.0, 0.0), 0.0, 0.00001);
 
   TEST_EXPECT_FLOAT(IVY_LERP(0.0, 1.0, 0.0), 0.0, 0.00001);
@@ -113,7 +113,7 @@ TEST_CASE(math_lerp) {
   TEST_OK();
 }
 
-TEST_CASE(math_trig) {
+TEST_CASE(math_test_trig) {
   for (f32 i = -IVY_2PI; i < IVY_2PI * 2; i += 0.0001) {
     TEST_EXPECT_FLOAT(ivy_sin(i), sinf(i), 0.00001f);
     TEST_EXPECT_FLOAT(ivy_cos(i), cosf(i), 0.00001f);
@@ -127,7 +127,7 @@ TEST_CASE(math_trig) {
 }
 
 // testing sqrt also tests inv_sqrt
-TEST_CASE(math_sqrt) {
+TEST_CASE(math_test_sqrt) {
   for (f32 i = 0.0f; i <= 1000.0f; i += 0.01f) {
     TEST_EXPECT_FLOAT(ivy_sqrt(i), sqrtf(i), 0.00001f);
   }
@@ -140,7 +140,7 @@ TEST_CASE(math_sqrt) {
   TEST_OK();
 }
 
-TEST_CASE(math_pow) {
+TEST_CASE(math_test_pow) {
   for (float base = -2.5f; base <= 2.5f; base += 0.1f) {
     for (i32 pow = -3; pow <= 3; pow++) {
       TEST_EXPECT_FLOAT(ivy_pow_f32(base, pow), powf(base, pow), 10.0f);
@@ -160,13 +160,13 @@ TEST_CASE(math_pow) {
   TEST_OK();
 }
 
-TEST_SUITE(math_suite) {
-  TEST_RUN(math_abs);
-  TEST_RUN(math_min);
-  TEST_RUN(math_max);
-  TEST_RUN(math_clamp);
-  TEST_RUN(math_lerp);
-  TEST_RUN(math_trig);
-  TEST_RUN(math_sqrt);
-  TEST_RUN(math_pow);
+TEST_SUITE(math_test_suite) {
+  TEST_RUN(math_test_abs);
+  TEST_RUN(math_test_min);
+  TEST_RUN(math_test_max);
+  TEST_RUN(math_test_clamp);
+  TEST_RUN(math_test_lerp);
+  TEST_RUN(math_test_trig);
+  TEST_RUN(math_test_sqrt);
+  TEST_RUN(math_test_pow);
 }

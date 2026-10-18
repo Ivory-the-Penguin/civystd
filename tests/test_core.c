@@ -1,7 +1,7 @@
 #include "../ivy_core.h"
 #include "../ivy_test.h"
 
-TEST_CASE(core_type_sizes) {
+TEST_CASE(core_test_type_sizes) {
   TEST_EXPECT(sizeof(i8), 1, "{i:u}");
   TEST_EXPECT(sizeof(u8), 1, "{i:u}");
 
@@ -23,4 +23,4 @@ TEST_CASE(core_type_sizes) {
   TEST_OK();
 }
 
-TEST_SUITE(core_suite) { TEST_RUN(core_type_sizes); }
+TEST_SUITE(core_test_suite) { TEST_RUN(core_test_type_sizes); }
