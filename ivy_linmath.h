@@ -1,6 +1,6 @@
 /*
   ----- Ivy Linmath -----
-  Version: 1.2.1
+  Version: 1.3.0
   License: MIT-0
 
   This is a header only library for linear algebra in the ivystd.
@@ -1089,6 +1089,41 @@ IVY_FORCE_INLINE mat4_t mat4_orpho_zo(f32 left, f32 right, f32 bottom, f32 top,
   out.elements[3][2] = (near) / (near - far);
 
   return out;
+}
+
+IVY_FORCE_INLINE mat4_t mat4_look_dir(vec3_t forward, vec3_t right, vec3_t up,
+                                      vec3_t eye) {
+  mat4_t out;
+
+  out.elements[0][0] = right.x;
+  out.elements[0][1] = up.x;
+  out.elements[0][2] = -forward.x;
+  out.elements[0][3] = 0.0f;
+
+  out.elements[1][0] = right.y;
+  out.elements[1][1] = up.y;
+  out.elements[1][2] = -forward.y;
+  out.elements[1][3] = 0.0f;
+
+  out.elements[2][0] = right.z;
+  out.elements[2][1] = up.z;
+  out.elements[2][2] = -forward.z;
+  out.elements[2][3] = 0.0f;
+
+  out.elements[3][0] = -vec3_dot(right, eye);
+  out.elements[3][1] = -vec3_dot(up, eye);
+  out.elements[3][2] = vec3_dot(forward, eye);
+  out.elements[3][3] = 1.0f;
+
+  return out;
+}
+
+IVY_FORCE_INLINE mat4_t mat4_look_at(vec3_t eye, vec3_t center, vec3_t up) {
+  vec3_t forward = vec3_norm(vec3_sub(center, eye));
+  vec3_t right = vec3_norm(vec3_cross(forward, up));
+  vec3_t local_up = vec3_cross(right, forward);
+
+  return mat4_look_dir(forward, right, local_up, eye);
 }
 
 /*
