@@ -1,6 +1,6 @@
 /*
   ----- Ivy String View -----
-  Version: 1.5.1
+  Version: 1.5.2
   License: MIT-0
 This stb-style header has a feature-full string view for the ivystd.
   Use IVY_IMPL macro for implementation
@@ -75,6 +75,7 @@ alloc.
 
 #include "ivy_allocator.h"
 #include "ivy_core.h"
+#include "ivy_math.h"
 
 typedef struct {
   const c8 *data;
@@ -103,7 +104,7 @@ IVY_FORCE_INLINE string_view_t sv(const char *c_str) {
 1 means a is bigger than b,
 */
 IVY_FORCE_INLINE i8 sv_compare(string_view_t a, string_view_t b) {
-  int cmp = memcmp(a.data, b.data, (a.length < b.length ? a.length : b.length));
+  int cmp = memcmp(a.data, b.data, IVY_MIN(a.length, b.length));
 
   if (cmp == 0) {
     if (a.length == b.length) {
