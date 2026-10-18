@@ -1,6 +1,6 @@
 /*
   ----- Ivy Test ------
-  Version: 1.4.0
+  Version: 1.5.0
   License: MIT-0
 
   This stb-style header has testing for the ivystd.
@@ -9,6 +9,7 @@
 #ifndef IVY_TEST_H
 #define IVY_TEST_H
 
+#include "ivy_allocator.h"
 #include "ivy_core.h"
 #include "ivy_fb.h"
 #include "ivy_fmt.h"
@@ -33,13 +34,13 @@ extern IVY_THREAD_LOCAL allocator_t _scratch_alloc;
   ivy_print("{i:ul}/{i:ul} TESTS {cs}\n\n", tests_passed, total_tests, \
             TEST_CASE_PASSED);
 
-#define TEST_CASE(name) IVY_FORCE_INLINE b8(name)(void)
+#define TEST_CASE(name) IVY_FORCE_INLINE b8(name)(allocator_t test_alloc)
 
 #define TEST_RUN(name)                                   \
   do {                                                   \
     test_msg = NULL;                                     \
     total_tests++;                                       \
-    b8 result = (name)();                                \
+    b8 result = (name)(test_alloc);                      \
     if (result) {                                        \
       ivy_print(TEST_CASE_FMT, TEST_CASE_PASSED, #name); \
       tests_passed++;                                    \
@@ -87,15 +88,22 @@ extern IVY_THREAD_LOCAL allocator_t _scratch_alloc;
     return true;  \
   } while (0)
 
-#define TEST_SUITE(name) IVY_FORCE_INLINE void(name)(void)
+#define TEST_SUITE(name) IVY_FORCE_INLINE void(name)(allocator_t test_alloc)
 
-#define TEST_SUITE_RUN(name)                \
-  do {                                      \
-    total_tests = 0;                        \
-    tests_passed = 0;                       \
-    ivy_print(TEST_SUITE_BEGIN_FMT, #name); \
-    (name)();                               \
-    TEST_SUITE_END                          \
+#define TEST_SUITE_RUN(name)                                    \
+  do {                                                          \
+    total_tests = 0;                                            \
+    tests_passed = 0;                                           \
+                                                                \
+    arena_t test_arena = arena_make(heap);                      \
+    allocator_t test_alloc = arena_make_allocator(&test_arena); \
+                                                                \
+    ivy_print(TEST_SUITE_BEGIN_FMT, #name);                     \
+    (name)(test_alloc);                                         \
+    TEST_SUITE_END                                              \
+                                                                \
+    arena_free(&test_arena);                                    \
+                                                                \
   } while (0)
 
 #ifdef IVY_IMPL
