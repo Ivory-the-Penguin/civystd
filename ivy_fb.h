@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fixed Buffer -----
-  Version: 1.1.2
+  Version: 1.1.3
   License: MIT-0
 
   This header only library has a fixed buffer allocator for the ivystd.
@@ -28,8 +28,8 @@ IVY_FORCE_INLINE fixed_buffer_t fb_make(u8 *buffer, u64 n) {
   };
 }
 
-IVY_FORCE_INLINE void *_fb_alloc(allocator_t *self, u64 bytes) {
-  fixed_buffer_t *ctx = (fixed_buffer_t *)self->ctx;
+IVY_FORCE_INLINE void *_fb_alloc(allocator_t self, u64 bytes) {
+  fixed_buffer_t *ctx = (fixed_buffer_t *)self.ctx;
 
   u64 aligned_bytes = align_bytes(bytes);
 

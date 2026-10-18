@@ -1,6 +1,6 @@
 /*
   ----- Ivy Arena -----
-  Version: 1.3.3
+  Version: 1.3.4
   License: MIT-0
 
   This header only library has an arena allocator for the ivystd.
@@ -41,8 +41,8 @@ IVY_FORCE_INLINE arena_t arena_make(allocator_t alloc) {
   return arena;
 }
 
-IVY_FORCE_INLINE void *_arena_alloc(allocator_t *self, u64 bytes) {
-  arena_t *ctx = (arena_t *)self->ctx;
+IVY_FORCE_INLINE void *_arena_alloc(allocator_t self, u64 bytes) {
+  arena_t *ctx = (arena_t *)self.ctx;
 
   IVY_ASSERT(ctx->alloc.alloc != NULL, "Arena is already freed");
 
