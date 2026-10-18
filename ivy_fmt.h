@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.8.0
+  Version: 1.9.0
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -278,6 +278,16 @@ IVY_FORCE_INLINE void _fmt_v4(va_list args, string_builder_t *buffer,
                                   vec.y, vec.z, vec.w));
 }
 
+IVY_FORCE_INLINE void _fmt_boolean(va_list args, string_builder_t *buffer,
+                                   string_view_t flags, allocator_t scratch) {
+  b8 b = va_arg(args, u32);
+  if (b) {
+    sb_append_sv(buffer, sv("true"));
+  } else {
+    sb_append_sv(buffer, sv("false"));
+  }
+}
+
 IVY_CONSTRUCTOR static void fmt_add_builtins() {
   fmt_register(sv("cs"), _fmt_c_string);
   fmt_register(sv("i"), _fmt_int);
@@ -285,6 +295,7 @@ IVY_CONSTRUCTOR static void fmt_add_builtins() {
   fmt_register(sv("f"), _fmt_f32);
   fmt_register(sv("fg"), _fmt_color);
   fmt_register(sv("fmt"), _fmt_fmt);
+  fmt_register(sv("b"), _fmt_boolean);
 
   fmt_register(sv("v2"), _fmt_v2);
   fmt_register(sv("v3"), _fmt_v3);
