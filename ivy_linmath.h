@@ -1,6 +1,6 @@
 /*
   ----- Ivy Linmath -----
-  Version: 1.0.5
+  Version: 1.1.0
   License: MIT-0
 
   This is a header only library for linear algebra in the ivystd.
@@ -1015,17 +1015,46 @@ IVY_FORCE_INLINE mat4_t mat4_rotate(f32 angle, vec3_t axis) {
   f32 cos_value = 1.0f - cos_theta;
 
   out.elements[0][0] = (axis.x * axis.x * cos_value) + cos_theta;
-  out.elements[1][1] = (axis.y * axis.y * cos_value) + cos_theta;
-  out.elements[2][2] = (axis.z * axis.z * cos_value) + cos_theta;
-
   out.elements[0][1] = (axis.x * axis.y * cos_value) + (axis.z * sin_theta);
   out.elements[0][2] = (axis.x * axis.z * cos_value) - (axis.y * sin_theta);
 
   out.elements[1][0] = (axis.y * axis.x * cos_value) - (axis.z * sin_theta);
+  out.elements[1][1] = (axis.y * axis.y * cos_value) + cos_theta;
   out.elements[1][2] = (axis.y * axis.z * cos_value) + (axis.x * sin_theta);
 
   out.elements[2][0] = (axis.z * axis.x * cos_value) + (axis.y * sin_theta);
   out.elements[2][1] = (axis.z * axis.y * cos_value) - (axis.x * sin_theta);
+  out.elements[2][2] = (axis.z * axis.z * cos_value) + cos_theta;
+
+  return out;
+}
+
+IVY_FORCE_INLINE mat4_t mat4_perspective_zo(float fov, float aspect_ratio,
+                                            float near, float far) {
+  mat4_t out = mat4(0.0f);
+
+  float cotangent = 1.0f / ivy_tan(fov / 2.0f);
+  out.elements[0][0] = cotangent / aspect_ratio;
+  out.elements[1][1] = cotangent;
+  out.elements[2][3] = -1.0f;
+
+  out.elements[2][2] = (far) / (near - far);
+  out.elements[3][2] = (near * far) / (near - far);
+
+  return out;
+}
+
+IVY_FORCE_INLINE mat4_t mat4_perspective_no(float fov, float aspect_ratio,
+                                            float near, float far) {
+  mat4_t out = mat4(0.0f);
+
+  float cotangent = 1.0f / ivy_tan(fov / 2.0f);
+  out.elements[0][0] = cotangent / aspect_ratio;
+  out.elements[1][1] = cotangent;
+  out.elements[2][3] = -1.0f;
+
+  out.elements[2][2] = (near + far) / (near - far);
+  out.elements[3][2] = (2.0f * near * far) / (near - far);
 
   return out;
 }
