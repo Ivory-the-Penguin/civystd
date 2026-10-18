@@ -1,6 +1,6 @@
 /*
   ----- Ivy Test ------
-  Version: 1.2.2
+  Version: 1.2.3
   License: MIT-0
 
   This stb-style header has testing for the ivystd.
@@ -29,8 +29,8 @@ extern __thread allocator_t _scratch_alloc;
 
 #define TEST_SUITE_BEGIN_FMT \
   "----- " ANSI_COLOR_MAGENTA "{cs}" ANSI_RESET " -----\n"
-#define TEST_SUITE_END                                               \
-  ivy_print("{iul}/{iul} TESTS {cs}\n\n", tests_passed, total_tests, \
+#define TEST_SUITE_END                                                 \
+  ivy_print("{i:ul}/{i:ul} TESTS {cs}\n\n", tests_passed, total_tests, \
             TEST_CASE_PASSED);
 
 #define TEST_CASE(name) IVY_FORCE_INLINE b8(name)(void)
