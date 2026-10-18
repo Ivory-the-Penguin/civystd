@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.6.0
+  Version: 1.7.0
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -19,14 +19,6 @@
 #include "ivy_sb.h"
 #include "ivy_sv.h"
 
-typedef void (*fmt_func_t)(va_list args, string_builder_t *buffer,
-                           string_view_t flags, allocator_t scratch);
-
-typedef struct {
-  string_view_t prefix;
-  fmt_func_t callback;
-} fmt_spec_t;
-
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_GREEN "\x1b[32m"
 #define ANSI_COLOR_YELLOW "\x1b[33m"
@@ -37,6 +29,14 @@ typedef struct {
 #define ANSI_RESET "\033[0m"
 
 #define FMT_REGISTRY_MAX 32
+
+typedef void (*fmt_func_t)(va_list args, string_builder_t *buffer,
+                           string_view_t flags, allocator_t scratch);
+
+typedef struct {
+  string_view_t prefix;
+  fmt_func_t callback;
+} fmt_spec_t;
 
 void fmt_register(string_view_t prefix, fmt_func_t callback);
 
@@ -93,12 +93,15 @@ string_view_t _fmt_raw(allocator_t alloc, string_view_t fmt, va_list args) {
       fmt = sv_chop_left(fmt, 1);
       continue;
     }
-    string_view_t fmt_option = sv_chop_by_delimiter(&fmt, '}');
+    string_view_t full_option = sv_chop_by_delimiter(&fmt, '}');
     b8 found = false;
+
+    string_view_t fmt_option = sv_chop_by_delimiter(&full_option, ':');
+    string_view_t flags = full_option;
+
     for (u64 i = 0; i < registry_length; i++) {
-      if (sv_has_prefix(fmt_option, registry[i].prefix)) {
-        fmt_option = sv_chop_left(fmt_option, registry[i].prefix.length);
-        registry[i].callback(args, &buffer, fmt_option, scratch_alloc);
+      if (sv_compare(fmt_option, registry[i].prefix) == 0) {
+        registry[i].callback(args, &buffer, flags, scratch_alloc);
         found = true;
         break;
       }
@@ -220,10 +223,6 @@ IVY_FORCE_INLINE void _fmt_sv(va_list args, string_builder_t *buffer,
 
 IVY_FORCE_INLINE void _fmt_color(va_list args, string_builder_t *buffer,
                                  string_view_t flags, allocator_t scratch) {
-  IVY_ASSERT(flags.data[0] == ':', "Use it like: fg:red for example");
-
-  flags = sv_chop_left(flags, 1);
-
   if (sv_compare(flags, sv("red")) == 0) {
     sb_append_sv(buffer, sv(ANSI_COLOR_RED));
   } else if (sv_compare(flags, sv("green")) == 0) {
