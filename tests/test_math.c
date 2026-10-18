@@ -3,7 +3,7 @@
 #include "../ivy_math.h"
 #include "../ivy_test.h"
 
-TEST_CASE(math_abs_signed) {
+TEST_CASE(math_abs) {
   TEST_EXPECT(IVY_ABS(123), 123, "{i}");
   TEST_EXPECT(IVY_ABS(-200), 200, "{i}");
 
@@ -17,10 +17,6 @@ TEST_CASE(math_abs_signed) {
   TEST_EXPECT(IVY_ABS(I64_MAX), I64_MAX, "{i:l}");
   TEST_EXPECT(IVY_ABS(I64_MIN + 1), I64_MAX, "{i:l}");
 
-  TEST_OK();
-}
-
-TEST_CASE(math_abs_unsigned) {
   TEST_EXPECT(IVY_ABS(10203040U), 10203040U, "{i:u}");
   TEST_EXPECT(IVY_ABS(0), 0, "{i:u}");
   TEST_EXPECT(IVY_ABS(U32_MAX), U32_MAX, "{i:u}");
@@ -165,8 +161,7 @@ TEST_CASE(math_pow) {
 }
 
 TEST_SUITE(math_suite) {
-  TEST_RUN(math_abs_signed);
-  TEST_RUN(math_abs_unsigned);
+  TEST_RUN(math_abs);
   TEST_RUN(math_min);
   TEST_RUN(math_max);
   TEST_RUN(math_clamp);
