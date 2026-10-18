@@ -1,12 +1,12 @@
 /*
   ----- Ivy Allocator -----
-  Version: 0.1.2
+  Version: 1.0.0
   License: MIT-0
 
   This is an stb-style header has allocators for the ivystd.
   Inspired by Zig's allocators.
 
-  Use IVY_IMPL macro for implementation
+  Use IVY_IMPL macro for implementation.
 */
 
 #ifndef IVY_ALLOCATOR_H
@@ -24,9 +24,9 @@ typedef struct allocator_t {
   void *ctx;
   allocator_flag_t flags;
 
-  void *(*alloc)(struct allocator_t *self, u64 size);
-  void *(*realloc)(struct allocator_t *self, void *ptr, u64 new_size);
-  void (*free)(struct allocator_t *self, void *ptr);
+  void *(*alloc)(struct allocator_t self, u64 size);
+  void *(*realloc)(struct allocator_t self, void *ptr, u64 new_size);
+  void (*free)(struct allocator_t self, void *ptr);
 } allocator_t;
 
 IVY_FORCE_INLINE u64 align_bytes(u64 bytes) {
@@ -41,34 +41,34 @@ IVY_FORCE_INLINE b8 allocator_has_flag(allocator_t alloc,
 IVY_FORCE_INLINE void *ivy_alloc(allocator_t alloc, u64 size) {
   IVY_ASSERT(allocator_has_flag(alloc, ALLOCATOR_HAS_ALLOC),
              "Allocator doesn't have allocation capability");
-  return alloc.alloc(&alloc, size);
+  return alloc.alloc(alloc, size);
 }
 
 IVY_FORCE_INLINE void *ivy_realloc(allocator_t alloc, void *ptr, u64 new_size) {
   IVY_ASSERT(allocator_has_flag(alloc, ALLOCATOR_HAS_REALLOC),
              "Allocator doesn't have reallocation capability");
-  return alloc.realloc(&alloc, ptr, new_size);
+  return alloc.realloc(alloc, ptr, new_size);
 }
 
 IVY_FORCE_INLINE void ivy_free(allocator_t alloc, void *ptr) {
   if (allocator_has_flag(alloc, ALLOCATOR_HAS_FREE)) {
-    alloc.free(&alloc, ptr);
+    alloc.free(alloc, ptr);
   }
 }
 
-IVY_FORCE_INLINE void *_heap_alloc(allocator_t *self, u64 size) {
+IVY_FORCE_INLINE void *_heap_alloc(allocator_t self, u64 size) {
   (void)self;
   IVY_ASSERT(size > 0, "Size can't be zero");
   return malloc(((u64)size));
 }
 
-IVY_FORCE_INLINE void *_heap_realloc(allocator_t *self, void *ptr,
+IVY_FORCE_INLINE void *_heap_realloc(allocator_t self, void *ptr,
                                      u64 new_size) {
   (void)self;
   return realloc(ptr, new_size);
 }
 
-IVY_FORCE_INLINE void _heap_free(allocator_t *self, void *ptr) {
+IVY_FORCE_INLINE void _heap_free(allocator_t self, void *ptr) {
   (void)self;
   IVY_ASSERT(ptr != NULL, "Pointer can't be uninitialized or already freed");
   free(ptr);
