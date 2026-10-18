@@ -1,6 +1,6 @@
 /*
   ----- Ivy Math -----
-  Version: 0.6.2
+  Version: 0.6.3
   License: MIT-0
 
   This header only library has some useful maths functions for the ivystd.
@@ -8,10 +8,6 @@
 
 #ifndef IVY_MATH_H
 #define IVY_MATH_H
-
-#define IVY_MATH_MAJOR 0
-#define IVY_MATH_MINOR 6
-#define IVY_MATH_FIX 2
 
 #include "ivy_core.h"
 

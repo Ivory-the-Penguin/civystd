@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.5.1
+  Version: 1.5.2
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -11,10 +11,6 @@
 
 #ifndef IVY_FMT_H
 #define IVY_FMT_H
-
-#define IVY_FMT_MAJOR 1
-#define IVY_FMT_MINOR 5
-#define IVY_FMT_FIX 1
 
 #include <stdio.h>
 #include <string.h>
@@ -39,6 +35,7 @@ typedef struct {
 #define ANSI_COLOR_CYAN "\x1b[36m"
 #define ANSI_BOLD "\033[1m"
 #define ANSI_RESET "\033[0m"
+
 #define FMT_REGISTRY_MAX 32
 
 void fmt_register(string_view_t prefix, fmt_func_t callback);

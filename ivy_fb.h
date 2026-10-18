@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fixed Buffer -----
-  Version: 1.1.1
+  Version: 1.1.2
   License: MIT-0
 
   This header only library has a fixed buffer allocator for the ivystd.
@@ -9,10 +9,6 @@
 
 #ifndef IVY_FB_H
 #define IVY_FB_H
-
-#define IVY_FB_MAJOR 1
-#define IVY_FB_MINOR 1
-#define IVY_FB_FIX 1
 
 #include "ivy_allocator.h"
 #include "ivy_core.h"

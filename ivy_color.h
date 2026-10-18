@@ -1,6 +1,6 @@
 /*
   ----- Ivy Color -----
-  Version: 0.2.2
+  Version: 0.2.3
   License: MIT-0
 
   This is a header only library which has an implemention for colors
@@ -8,10 +8,6 @@
 
 #ifndef IVY_COLOR_H
 #define IVY_COLOR_H
-
-#define IVY_COLOR_MAJOR 0
-#define IVY_COLOR_MINOR 2
-#define IVY_COLOR_FIX 2
 
 #include "ivy_core.h"
 #include "ivy_linmath.h"

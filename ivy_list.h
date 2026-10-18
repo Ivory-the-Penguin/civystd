@@ -1,6 +1,6 @@
 /*
   ----- Ivy List -----
-  Version: 1.1.0
+  Version: 1.1.1
   License: MIT-0
 
   This is a header only library that has a generic list for the ivystd.
@@ -9,10 +9,6 @@
 
 #ifndef IVY_LIST_H
 #define IVY_LIST_H
-
-#define IVY_LIST_MAJOR 1
-#define IVY_LIST_MINOR 1
-#define IVY_LIST_FIX 0
 
 #include "ivy_allocator.h"
 #include "ivy_core.h"

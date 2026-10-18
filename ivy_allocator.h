@@ -1,6 +1,6 @@
 /*
   ----- Ivy Allocator -----
-  Version: 0.1.1
+  Version: 0.1.2
   License: MIT-0
 
   This is an stb-style header has allocators for the ivystd.
@@ -11,10 +11,6 @@
 
 #ifndef IVY_ALLOCATOR_H
 #define IVY_ALLOCATOR_H
-
-#define IVY_ALLOCATOR_MAJOR 0
-#define IVY_ALLOCATOR_MINOR 1
-#define IVY_ALLOCATOR_FIX 1
 
 #include "ivy_core.h"
 

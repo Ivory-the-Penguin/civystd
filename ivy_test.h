@@ -1,6 +1,6 @@
 /*
   ----- Ivy Test ------
-  Version: 1.2.1
+  Version: 1.2.2
   License: MIT-0
 
   This stb-style header has testing for the ivystd.
@@ -8,10 +8,6 @@
 
 #ifndef IVY_TEST_H
 #define IVY_TEST_H
-
-#define IVY_TEST_MAJOR 1
-#define IVY_TEST_MINOR 2
-#define IVY_TEST_FIX 1
 
 #include "ivy_core.h"
 #include "ivy_fb.h"

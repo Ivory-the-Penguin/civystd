@@ -1,6 +1,6 @@
 /*
   ----- Ivy Arena -----
-  Version: 1.3.2
+  Version: 1.3.3
   License: MIT-0
 
   This header only library has an arena allocator for the ivystd.
@@ -9,10 +9,6 @@
 
 #ifndef IVY_ARENA_H
 #define IVY_ARENA_H
-
-#define IVY_ARENA_MAJOR 1
-#define IVY_ARENA_MINOR 3
-#define IVY_ARENA_FIX 2
 
 #include "ivy_allocator.h"
 #include "ivy_core.h"
