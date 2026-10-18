@@ -1,6 +1,6 @@
 /*
   ----- Ivy Linmath -----
-  Version: 1.2.0
+  Version: 1.2.1
   License: MIT-0
 
   This is a header only library for linear algebra in the ivystd.
@@ -1059,8 +1059,8 @@ IVY_FORCE_INLINE mat4_t mat4_perspective_no(f32 fov, f32 aspect_ratio, f32 near,
   return out;
 }
 
-IVY_FORCE_INLINE mat4_t mat4_orphographic_no(f32 left, f32 right, f32 bottom,
-                                             f32 top, f32 near, f32 far) {
+IVY_FORCE_INLINE mat4_t mat4_orpho_no(f32 left, f32 right, f32 bottom, f32 top,
+                                      f32 near, f32 far) {
   mat4_t out = mat4(0.0f);
 
   out.elements[0][0] = 2.0f / (right - left);
@@ -1075,8 +1075,8 @@ IVY_FORCE_INLINE mat4_t mat4_orphographic_no(f32 left, f32 right, f32 bottom,
   return out;
 }
 
-IVY_FORCE_INLINE mat4_t mat4_orphographic_zo(f32 left, f32 right, f32 bottom,
-                                             f32 top, f32 near, f32 far) {
+IVY_FORCE_INLINE mat4_t mat4_orpho_zo(f32 left, f32 right, f32 bottom, f32 top,
+                                      f32 near, f32 far) {
   mat4_t out = mat4(0.0f);
 
   out.elements[0][0] = 2.0f / (right - left);
