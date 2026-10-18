@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.7.0
+  Version: 1.8.0
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -13,7 +13,6 @@
 #define IVY_FMT_H
 
 #include <stdio.h>
-#include <string.h>
 
 #include "ivy_allocator.h"
 #include "ivy_sb.h"
@@ -59,8 +58,11 @@ string_view_t fmt_f32(allocator_t alloc, f32 n);
 
 #ifdef IVY_IMPL
 
+#include <string.h>
+
 #include "ivy_arena.h"
 #include "ivy_core.h"
+#include "ivy_linmath.h"
 
 static arena_t scratch_arena;
 static allocator_t scratch_alloc;
@@ -256,6 +258,26 @@ IVY_FORCE_INLINE void _fmt_f32(va_list args, string_builder_t *buffer,
   sb_append_sv(buffer, f32_sv);
 }
 
+IVY_FORCE_INLINE void _fmt_v2(va_list args, string_builder_t *buffer,
+                              string_view_t flags, allocator_t scratch) {
+  vec2_t vec = va_arg(args, vec2_t);
+  sb_append_sv(buffer, fmt_format(scratch, sv("{{{f}, {f}}}"), vec.x, vec.y));
+}
+
+IVY_FORCE_INLINE void _fmt_v3(va_list args, string_builder_t *buffer,
+                              string_view_t flags, allocator_t scratch) {
+  vec3_t vec = va_arg(args, vec3_t);
+  sb_append_sv(buffer, fmt_format(scratch, sv("{{{f}, {f}, {f}}}"), vec.x,
+                                  vec.y, vec.z));
+}
+
+IVY_FORCE_INLINE void _fmt_v4(va_list args, string_builder_t *buffer,
+                              string_view_t flags, allocator_t scratch) {
+  vec4_t vec = va_arg(args, vec4_t);
+  sb_append_sv(buffer, fmt_format(scratch, sv("{{{f}, {f}, {f}, {f}}}"), vec.x,
+                                  vec.y, vec.z, vec.w));
+}
+
 IVY_CONSTRUCTOR static void fmt_add_builtins() {
   fmt_register(sv("cs"), _fmt_c_string);
   fmt_register(sv("i"), _fmt_int);
@@ -263,6 +285,10 @@ IVY_CONSTRUCTOR static void fmt_add_builtins() {
   fmt_register(sv("f"), _fmt_f32);
   fmt_register(sv("fg"), _fmt_color);
   fmt_register(sv("fmt"), _fmt_fmt);
+
+  fmt_register(sv("v2"), _fmt_v2);
+  fmt_register(sv("v3"), _fmt_v3);
+  fmt_register(sv("v4"), _fmt_v4);
 }
 
 #define I64_MAX_DIV_10 (I64_MAX / 10)
