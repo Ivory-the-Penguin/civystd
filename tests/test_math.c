@@ -130,6 +130,40 @@ TEST_CASE(math_trig) {
   TEST_OK();
 }
 
+// testing sqrt also tests inv_sqrt
+TEST_CASE(math_sqrt) {
+  for (f32 i = 0.0f; i <= 1000.0f; i += 0.01f) {
+    TEST_EXPECT_FLOAT(ivy_sqrt(i), sqrtf(i), 0.00001f);
+  }
+
+  TEST_EXPECT_FLOAT(ivy_sqrt(-123.0f), 0.0f, 0.00001f);
+
+  TEST_EXPECT_FLOAT(ivy_sqrt((f32)I32_MAX), sqrtf((f32)I32_MAX), 100.0f);
+  TEST_EXPECT_FLOAT(ivy_sqrt((f32)I64_MAX), sqrtf((f32)I64_MAX), 500.0f);
+
+  TEST_OK();
+}
+
+TEST_CASE(math_pow) {
+  for (float base = -2.5f; base <= 2.5f; base += 0.1f) {
+    for (i32 pow = -3; pow <= 3; pow++) {
+      TEST_EXPECT_FLOAT(ivy_pow_f32(base, pow), powf(base, pow), 10.0f);
+    }
+  }
+
+  TEST_EXPECT(ivy_pow_i64(-2, 31), powl(-2, 31), "{i:l}");
+  TEST_EXPECT(ivy_pow_i64(-2, 32), powl(-2, 32), "{i:l}");
+  TEST_EXPECT(ivy_pow_i64(2, 32), powl(-2, 32), "{i:l}");
+  TEST_EXPECT(ivy_pow_i64(2, 10), powl(2, 10), "{i:l}");
+  TEST_EXPECT(ivy_pow_i64(12345, 0), powl(12345, 0), "{i:l}");
+
+  TEST_EXPECT(ivy_pow_u64(2, 60), powl(2, 60), "{i:lu}");
+  TEST_EXPECT(ivy_pow_u64(2, 48), powl(2, 48), "{i:lu}");
+  TEST_EXPECT(ivy_pow_u64(987654321, 0), powl(987654321, 0), "{i:lu}");
+
+  TEST_OK();
+}
+
 TEST_SUITE(math_suite) {
   TEST_RUN(math_abs_signed);
   TEST_RUN(math_abs_unsigned);
@@ -138,4 +172,6 @@ TEST_SUITE(math_suite) {
   TEST_RUN(math_clamp);
   TEST_RUN(math_lerp);
   TEST_RUN(math_trig);
+  TEST_RUN(math_sqrt);
+  TEST_RUN(math_pow);
 }
