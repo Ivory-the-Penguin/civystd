@@ -25,7 +25,7 @@
 #define IVY_CLAMP(value, min, max) \
   ((value) > (max) ? (max) : ((value) < (min) ? (min) : (value)))
 
-#define IVY_LERP(a, b, t) ((a) + ((b) - (a)) * (t))
+#define IVY_LERP(a, b, t) ((a) * (1 - (t)) + (b) * (t))
 
 #define IVY_ABS(x) ((x) < 0 ? -(x) : (x))
 
