@@ -1,6 +1,6 @@
 /*
   ----- Ivy Math -----
-  Version: 0.9.0
+  Version: 0.9.1
   License: MIT-0
 
   This header only library has some useful maths functions for the ivystd.
@@ -30,7 +30,7 @@
 #define IVY_ABS(x) ((x) < 0 ? -(x) : (x))
 
 // exponent by squaring
-IVY_FORCE_INLINE f32 ivy_pow_f(f32 x, i64 n) {
+IVY_FORCE_INLINE f32 ivy_pow_f32(f32 x, i64 n) {
   if (n < 0) {
     x = 1 / x;
     n *= -1;
