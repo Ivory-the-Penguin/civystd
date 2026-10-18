@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.4.0
+  Version: 1.5.0
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -12,8 +12,10 @@
 #ifndef IVY_FMT_H
 #define IVY_FMT_H
 
+#include <stdio.h>
+#include <string.h>
 #define IVY_FMT_MAJOR 1
-#define IVY_FMT_MINOR 4
+#define IVY_FMT_MINOR 5
 #define IVY_FMT_FIX 0
 
 #include "ivy_allocator.h"
@@ -51,9 +53,11 @@ void ivy_print_file(FILE *file, const char *fmt, ...);
 
 i64 fmt_parse_i64(string_view_t sv);
 u64 fmt_parse_u64(string_view_t sv);
+f32 fmt_parse_f32(string_view_t sv);
 
 string_view_t fmt_i64(allocator_t alloc, i64 n);
 string_view_t fmt_u64(allocator_t alloc, u64 n);
+string_view_t fmt_f32(allocator_t alloc, f32 n);
 
 #ifdef IVY_IMPL
 
@@ -376,6 +380,35 @@ string_view_t fmt_u64(allocator_t alloc, u64 n) {
       .data = buffer,
       .length = length + 1,
   };
+}
+
+f32 fmt_parse_f32(string_view_t sv) {
+  f32 out;
+
+  arena_clear(&scratch_arena);
+
+  char *c_str = ivy_alloc(scratch_alloc, sizeof(c8) * (sv.length + 1));
+  memcpy(c_str, sv.data, sv.length);
+
+  c_str[sv.length + 1] = '\0';
+
+  sscanf(c_str, "%f", &out);
+
+  return out;
+}
+
+string_view_t fmt_f32(allocator_t alloc, f32 n) {
+  u8 buffer[64];
+
+  snprintf((void *)buffer, 64, "%f", n);
+
+  u64 len = strlen((char *)buffer);
+
+  u8 *str = ivy_alloc(alloc, len + 1);
+
+  memcpy(str, buffer, len + 1);
+
+  return (string_view_t){.data = str, .length = len};
 }
 
 #endif
