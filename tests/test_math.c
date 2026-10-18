@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "../ivy_math.h"
 #include "../ivy_test.h"
 
@@ -22,7 +24,6 @@ TEST_CASE(math_abs_unsigned) {
   TEST_EXPECT(IVY_ABS(10203040U), 10203040U, "{i:u}");
   TEST_EXPECT(IVY_ABS(0), 0, "{i:u}");
   TEST_EXPECT(IVY_ABS(U32_MAX), U32_MAX, "{i:u}");
-
   TEST_EXPECT(IVY_ABS(70605040302010ULL), 70605040302010ULL, "{i:ul}");
   TEST_EXPECT(IVY_ABS(0LL), 0LL, "{i:ul}");
   TEST_EXPECT(IVY_ABS(U64_MAX), U64_MAX, "{i:ul}");
@@ -116,6 +117,19 @@ TEST_CASE(math_lerp) {
   TEST_OK();
 }
 
+TEST_CASE(math_trig) {
+  for (f32 i = -IVY_2PI; i < IVY_2PI * 2; i += 0.001) {
+    TEST_EXPECT_FLOAT(ivy_sin(i), sinf(i), 0.00001f);
+    TEST_EXPECT_FLOAT(ivy_cos(i), cosf(i), 0.00001f);
+
+    if (IVY_ABS(cosf(i)) > 0.05f) {
+      TEST_EXPECT_FLOAT(ivy_tan(i), tanf(i), 0.001f);
+    }
+  }
+
+  TEST_OK();
+}
+
 TEST_SUITE(math_suite) {
   TEST_RUN(math_abs_signed);
   TEST_RUN(math_abs_unsigned);
@@ -123,4 +137,5 @@ TEST_SUITE(math_suite) {
   TEST_RUN(math_max);
   TEST_RUN(math_clamp);
   TEST_RUN(math_lerp);
+  TEST_RUN(math_trig);
 }
