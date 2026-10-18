@@ -1,6 +1,6 @@
 /*
   ----- Ivy Core -----
-  Version: 0.5.1
+  Version: 0.6.0
   License: MIT-0
 
   This header only library has useful macro's and stuff for the ivystd.
@@ -51,6 +51,12 @@
 #define IVY_CONSTRUCTOR __attribute__((constructor))
 #define IVY_DESTRUCTOR __attribute__((destructor))
 
+#if defined(__TINYC__)
+#define IVY_THREAD_LOCAL
+#else
+#define IVY_THREAD_LOCAL __thread
+#endif
+
 // Copied with modifications from nostdlib
 typedef unsigned char u8;
 typedef signed char i8;
@@ -65,9 +71,6 @@ typedef signed long isize;
 typedef unsigned long uptr;
 typedef signed long iptr;
 typedef signed long ptrdiff;
-
-typedef __INTMAX_TYPE__ imax;
-typedef __UINTMAX_TYPE__ umax;
 
 #define I8_MIN (-128)
 #define I16_MIN (-32767 - 1)
@@ -90,10 +93,6 @@ typedef __UINTMAX_TYPE__ umax;
 #define PTRDIFF_MIN IPTR_MIN
 #define PTRDIFF_MAX IPTR_MAX
 #define UPTR_MAX SIZE_MAX
-
-#define IMAX_MIN I64_MIN
-#define IMAX_MAX I64_MAX
-#define UMAX_MAX U64_MAX
 
 #ifndef INT_MIN
 #define INT_MIN (-__INT_MAX__ - 1)

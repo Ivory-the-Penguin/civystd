@@ -1,6 +1,6 @@
 /*
   ----- Ivy Test ------
-  Version: 1.3.0
+  Version: 1.3.1
   License: MIT-0
 
   This stb-style header has testing for the ivystd.
@@ -14,12 +14,12 @@
 #include "ivy_fmt.h"
 #include "ivy_math.h"
 
-extern __thread u64 tests_passed;
-extern __thread u64 total_tests;
-extern __thread char *test_msg;
-extern __thread u8 _scratch_buffer[1024];
-extern __thread fixed_buffer_t _scratch_fb;
-extern __thread allocator_t _scratch_alloc;
+extern IVY_THREAD_LOCAL u64 tests_passed;
+extern IVY_THREAD_LOCAL u64 total_tests;
+extern IVY_THREAD_LOCAL char *test_msg;
+extern IVY_THREAD_LOCAL u8 _scratch_buffer[1024];
+extern IVY_THREAD_LOCAL fixed_buffer_t _scratch_fb;
+extern IVY_THREAD_LOCAL allocator_t _scratch_alloc;
 
 #define TEST_CASE_FMT "[ " ANSI_BOLD "{cs}" ANSI_RESET " ] {cs}\n"
 #define TEST_CASE_ASSERT_FMT "\tAssert failed! {cs}\n"
@@ -102,12 +102,12 @@ extern __thread allocator_t _scratch_alloc;
 
 #ifdef IVY_IMPL
 
-__thread u64 tests_passed;
-__thread u64 total_tests;
-__thread char *test_msg;
-__thread u8 _scratch_buffer[1024];
-__thread fixed_buffer_t _scratch_fb;
-__thread allocator_t _scratch_alloc;
+IVY_THREAD_LOCAL u64 tests_passed;
+IVY_THREAD_LOCAL u64 total_tests;
+IVY_THREAD_LOCAL char *test_msg;
+IVY_THREAD_LOCAL u8 _scratch_buffer[1024];
+IVY_THREAD_LOCAL fixed_buffer_t _scratch_fb;
+IVY_THREAD_LOCAL allocator_t _scratch_alloc;
 
 #endif
 
