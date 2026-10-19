@@ -1,6 +1,6 @@
 /*
   ----- Ivy Core -----
-  Version: 0.6.0
+  Version: 0.7.0
   License: MIT-0
 
   This header only library has useful macro's and stuff for the ivystd.
@@ -51,10 +51,20 @@
 #define IVY_CONSTRUCTOR __attribute__((constructor))
 #define IVY_DESTRUCTOR __attribute__((destructor))
 
+#ifdef IVY_ATLEAST_C11
+
+#include <threads.h>
+
+#define IVY_THREAD_LOCAL _Thread_local
+
+#else
+
 #if defined(__TINYC__)
 #define IVY_THREAD_LOCAL
 #else
 #define IVY_THREAD_LOCAL __thread
+#endif
+
 #endif
 
 // Copied with modifications from nostdlib
