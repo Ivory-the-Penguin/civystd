@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 0.8.0
+  Version: 0.8.1
   License: MIT-0
 */
 
@@ -123,8 +123,6 @@ IVY_FORCE_INLINE void bin_encode_sv(bin_t *bin, string_view_t sv) {
   _Generic((item),                \
       i8: bin_encode_i8,          \
       u8: bin_encode_u8,          \
-      c8: bin_encode_u8,          \
-      b8: bin_encode_u8,          \
       i16: bin_encode_i16,        \
       u16: bin_encode_u16,        \
       i32: bin_encode_i32,        \
@@ -139,7 +137,7 @@ IVY_FORCE_INLINE void bin_encode_sv(bin_t *bin, string_view_t sv) {
       mat2_t: bin_encode_mat2,    \
       mat3_t: bin_encode_mat3,    \
       mat4_t: bin_encode_mat4,    \
-      string_view_t: bin_encode_sv, )(bin_ptr, item)
+      string_view_t: bin_encode_sv)((bin_ptr), (item))
 
 #endif
 
