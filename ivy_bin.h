@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 0.6.0
+  Version: 0.6.1
   License: MIT-0
 */
 
@@ -39,8 +39,8 @@ IVY_FORCE_INLINE void bin_close(bin_t *bin) {
 }
 
 IVY_FORCE_INLINE void bin_encode_raw(bin_t *bin, void *ptr, u64 item_size,
-                                     u64 items) {
-  fwrite(ptr, item_size, items, bin->file);
+                                     u64 count) {
+  fwrite(ptr, item_size, count, bin->file);
 }
 
 IVY_FORCE_INLINE void bin_encode_i8(bin_t *bin, i8 n) {
