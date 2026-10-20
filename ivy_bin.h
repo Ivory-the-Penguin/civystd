@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 0.1.0
+  Version: 0.2.0
   License: MIT-0
 */
 
@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 #include "ivy_core.h"
+#include "ivy_sv.h"
 
 typedef enum {
   BIN_NONE,
@@ -36,8 +37,17 @@ IVY_FORCE_INLINE void bin_close(bin_t *bin) {
   bin->type = BIN_NONE;
 }
 
+IVY_FORCE_INLINE void bin_encode_raw(bin_t *bin, void *ptr, u64 item_size,
+                                     u64 items) {
+  fwrite(ptr, item_size, items, bin->file);
+}
+
 IVY_FORCE_INLINE void bin_encode_u8(bin_t *bin, u8 byte) {
-  fwrite(&byte, sizeof(u8), 1, bin->file);
+  bin_encode_raw(bin, &byte, sizeof(u8), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_sv(bin_t *bin, string_view_t sv) {
+  bin_encode_raw(bin, (void *)sv.data, sizeof(c8), sv.length);
 }
 
 #endif
