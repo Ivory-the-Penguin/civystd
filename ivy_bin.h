@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 0.7.0
+  Version: 0.8.0
   License: MIT-0
 */
 
@@ -75,14 +75,6 @@ IVY_FORCE_INLINE void bin_encode_u64(bin_t *bin, u64 n) {
   bin_encode_raw(bin, &n, sizeof(u64), 1);
 }
 
-IVY_FORCE_INLINE void bin_encode_c8(bin_t *bin, c8 n) {
-  bin_encode_raw(bin, &n, sizeof(c8), 1);
-}
-
-IVY_FORCE_INLINE void bin_encode_b8(bin_t *bin, b8 n) {
-  bin_encode_raw(bin, &n, sizeof(b8), 1);
-}
-
 IVY_FORCE_INLINE void bin_encode_f32(bin_t *bin, f32 n) {
   bin_encode_raw(bin, &n, sizeof(f32), 1);
 }
@@ -124,5 +116,31 @@ IVY_FORCE_INLINE void bin_encode_array(bin_t *bin, void *data, u64 item_size,
 IVY_FORCE_INLINE void bin_encode_sv(bin_t *bin, string_view_t sv) {
   bin_encode_array(bin, (void *)sv.data, sizeof(c8), sv.length);
 }
+
+#ifdef IVY_ATLEAST_C11
+
+#define bin_encode(bin_ptr, item) \
+  _Generic((item),                \
+      i8: bin_encode_i8,          \
+      u8: bin_encode_u8,          \
+      c8: bin_encode_u8,          \
+      b8: bin_encode_u8,          \
+      i16: bin_encode_i16,        \
+      u16: bin_encode_u16,        \
+      i32: bin_encode_i32,        \
+      u32: bin_encode_u32,        \
+      i64: bin_encode_i64,        \
+      u64: bin_encode_u64,        \
+      f32: bin_encode_f32,        \
+      f64: bin_encode_f64,        \
+      vec2_t: bin_encode_vec2,    \
+      vec3_t: bin_encode_vec3,    \
+      vec4_t: bin_encode_vec4,    \
+      mat2_t: bin_encode_mat2,    \
+      mat3_t: bin_encode_mat3,    \
+      mat4_t: bin_encode_mat4,    \
+      string_view_t: bin_encode_sv, )(bin_ptr, item)
+
+#endif
 
 #endif
