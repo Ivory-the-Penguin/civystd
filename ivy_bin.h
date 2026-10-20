@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 0.5.0
+  Version: 0.5.1
   License: MIT-0
 */
 
@@ -91,6 +91,7 @@ IVY_FORCE_INLINE void bin_encode_f64(bin_t *bin, f64 n) {
 }
 
 IVY_FORCE_INLINE void bin_encode_sv(bin_t *bin, string_view_t sv) {
+  bin_encode_u64(bin, sv.length);
   bin_encode_raw(bin, (void *)sv.data, sizeof(c8), sv.length);
 }
 
