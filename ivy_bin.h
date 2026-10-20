@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 0.5.1
+  Version: 0.6.0
   License: MIT-0
 */
 
@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 #include "ivy_core.h"
+#include "ivy_linmath.h"
 #include "ivy_sv.h"
 
 typedef enum {
@@ -88,6 +89,30 @@ IVY_FORCE_INLINE void bin_encode_f32(bin_t *bin, f32 n) {
 
 IVY_FORCE_INLINE void bin_encode_f64(bin_t *bin, f64 n) {
   bin_encode_raw(bin, &n, sizeof(f64), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_vec2(bin_t *bin, vec2_t v) {
+  bin_encode_raw(bin, &v, sizeof(vec2_t), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_vec3(bin_t *bin, vec3_t v) {
+  bin_encode_raw(bin, &v, sizeof(vec3_t), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_vec4(bin_t *bin, vec4_t v) {
+  bin_encode_raw(bin, &v, sizeof(vec4_t), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_mat2(bin_t *bin, mat2_t m) {
+  bin_encode_raw(bin, &m, sizeof(mat2_t), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_mat3(bin_t *bin, mat3_t m) {
+  bin_encode_raw(bin, &m, sizeof(mat3_t), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_mat4(bin_t *bin, mat4_t m) {
+  bin_encode_raw(bin, &m, sizeof(mat4_t), 1);
 }
 
 IVY_FORCE_INLINE void bin_encode_sv(bin_t *bin, string_view_t sv) {
