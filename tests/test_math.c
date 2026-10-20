@@ -149,7 +149,7 @@ TEST_CASE(math_test_pow) {
 
   TEST_EXPECT(ivy_pow_i64(-2, 31), powl(-2, 31), "{i:l}");
   TEST_EXPECT(ivy_pow_i64(-2, 32), powl(-2, 32), "{i:l}");
-  TEST_EXPECT(ivy_pow_i64(2, 32), powl(-2, 32), "{i:l}");
+  TEST_EXPECT(ivy_pow_i64(2, 32), powl(2, 32), "{i:l}");
   TEST_EXPECT(ivy_pow_i64(2, 10), powl(2, 10), "{i:l}");
   TEST_EXPECT(ivy_pow_i64(12345, 0), powl(12345, 0), "{i:l}");
 
