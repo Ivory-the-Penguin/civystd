@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 0.2.0
+  Version: 0.4.0
   License: MIT-0
 */
 
@@ -46,7 +46,7 @@ IVY_FORCE_INLINE void bin_encode_i8(bin_t *bin, i8 n) {
   bin_encode_raw(bin, &n, sizeof(i8), 1);
 }
 
-IVY_FORCE_INLINE void bin_encode_u8(bin_t *bin, i8 n) {
+IVY_FORCE_INLINE void bin_encode_u8(bin_t *bin, u8 n) {
   bin_encode_raw(bin, &n, sizeof(u8), 1);
 }
 
@@ -72,6 +72,14 @@ IVY_FORCE_INLINE void bin_encode_i64(bin_t *bin, i64 n) {
 
 IVY_FORCE_INLINE void bin_encode_u64(bin_t *bin, u64 n) {
   bin_encode_raw(bin, &n, sizeof(u64), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_c8(bin_t *bin, c8 n) {
+  bin_encode_raw(bin, &n, sizeof(c8), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_b8(bin_t *bin, b8 n) {
+  bin_encode_raw(bin, &n, sizeof(b8), 1);
 }
 
 IVY_FORCE_INLINE void bin_encode_sv(bin_t *bin, string_view_t sv) {
