@@ -42,8 +42,36 @@ IVY_FORCE_INLINE void bin_encode_raw(bin_t *bin, void *ptr, u64 item_size,
   fwrite(ptr, item_size, items, bin->file);
 }
 
-IVY_FORCE_INLINE void bin_encode_u8(bin_t *bin, u8 byte) {
-  bin_encode_raw(bin, &byte, sizeof(u8), 1);
+IVY_FORCE_INLINE void bin_encode_i8(bin_t *bin, i8 n) {
+  bin_encode_raw(bin, &n, sizeof(i8), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_u8(bin_t *bin, i8 n) {
+  bin_encode_raw(bin, &n, sizeof(u8), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_i16(bin_t *bin, i16 n) {
+  bin_encode_raw(bin, &n, sizeof(i16), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_u16(bin_t *bin, u16 n) {
+  bin_encode_raw(bin, &n, sizeof(u16), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_i32(bin_t *bin, i32 n) {
+  bin_encode_raw(bin, &n, sizeof(i32), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_u32(bin_t *bin, u32 n) {
+  bin_encode_raw(bin, &n, sizeof(u32), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_i64(bin_t *bin, i64 n) {
+  bin_encode_raw(bin, &n, sizeof(i64), 1);
+}
+
+IVY_FORCE_INLINE void bin_encode_u64(bin_t *bin, u64 n) {
+  bin_encode_raw(bin, &n, sizeof(u64), 1);
 }
 
 IVY_FORCE_INLINE void bin_encode_sv(bin_t *bin, string_view_t sv) {
