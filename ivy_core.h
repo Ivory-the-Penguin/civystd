@@ -1,6 +1,6 @@
 /*
   ----- Ivy Core -----
-  Version: 0.7.0
+  Version: 0.8.0
   License: MIT-0
 
   This header only library has useful macro's and stuff for the ivystd.
@@ -82,6 +82,15 @@ typedef unsigned long uptr;
 typedef signed long iptr;
 typedef signed long ptrdiff;
 
+typedef u8 b8;
+typedef u16 b16;
+typedef u32 b32;
+
+typedef float f32;
+typedef double f64;
+
+typedef u8 c8;
+
 #define I8_MIN (-128)
 #define I16_MIN (-32767 - 1)
 #define I32_MIN (-2147483647 - 1)
@@ -133,18 +142,18 @@ typedef signed long ptrdiff;
 #define ULLONG_MAX ((unsigned long long)(__LONG_LONG_MAX__) * 2 + 1)
 #endif
 
-typedef u8 b8;
-typedef u16 b16;
-typedef u32 b32;
-
-#define true 1
-#define false 0
-
-typedef u8 c8;
-
 #define C8_MAX U8_MAX
 
-typedef float f32;
-typedef double f64;
+#ifndef IVY_ATLEAST_C23
+
+#ifndef true
+#define true 1
+#endif
+
+#ifndef false
+#define false 0
+#endif
+
+#endif
 
 #endif
