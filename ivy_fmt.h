@@ -1,6 +1,6 @@
 /*
   ----- Ivy Fmt -----
-  Version: 1.9.1
+  Version: 1.10.0
   License: MIT-0
 
   This stb-style header has a formatting function for ivystd.
@@ -64,22 +64,14 @@ string_view_t fmt_f32(allocator_t alloc, f32 n);
 #include "ivy_core.h"
 #include "ivy_linmath.h"
 
-static arena_t scratch_arena;
-static allocator_t scratch_alloc;
-
-IVY_CONSTRUCTOR void _fmt_scratch_init(void) {
-  scratch_arena = arena_make(heap);
-  scratch_alloc = arena_make_allocator(&scratch_arena);
-}
-
-IVY_DESTRUCTOR void _fmt_scratch_clean(void) { arena_free(&scratch_arena); }
-
 fmt_spec_t registry[FMT_REGISTRY_MAX] = {0};
 u64 registry_length = 0;
 
 string_view_t _fmt_raw(allocator_t alloc, string_view_t fmt, va_list args) {
+  arena_t scratch_arena = arena_make(heap);
+  allocator_t scratch_alloc = arena_make_allocator(&scratch_arena);
+
   string_builder_t buffer = sb_make(heap);
-  arena_clear(&scratch_arena);
 
   while (fmt.length > 0) {
     c8 chopped = fmt.data[0];
@@ -114,6 +106,7 @@ string_view_t _fmt_raw(allocator_t alloc, string_view_t fmt, va_list args) {
 
   string_view_t out = sb_to_sv(alloc, &buffer);
   sb_free(&buffer);
+  arena_free(&scratch_arena);
 
   return out;
 }
@@ -129,19 +122,23 @@ string_view_t fmt_format(allocator_t alloc, string_view_t fmt, ...) {
 void ivy_print(const char *fmt, ...) {
   va_list args;
   va_start(args, fmt);
-  string_view_t view = _fmt_raw(scratch_alloc, sv(fmt), args);
+  string_view_t view = _fmt_raw(heap, sv(fmt), args);
   va_end(args);
 
   fwrite(view.data, sizeof(c8), view.length, stdout);
+
+  ivy_free(heap, (void *)view.data);
 }
 
 void ivy_print_file(FILE *file, const char *fmt, ...) {
   va_list args;
   va_start(args, fmt);
-  string_view_t view = _fmt_raw(scratch_alloc, sv(fmt), args);
+  string_view_t view = _fmt_raw(heap, sv(fmt), args);
   va_end(args);
 
   fwrite(view.data, sizeof(c8), view.length, file);
+
+  ivy_free(heap, (void *)view.data);
 }
 
 void fmt_register(string_view_t prefix, fmt_func_t callback) {
@@ -427,12 +424,14 @@ string_view_t fmt_u64(allocator_t alloc, u64 n) {
 f32 fmt_parse_f32(string_view_t sv) {
   f32 out;
 
-  char *c_str = ivy_alloc(scratch_alloc, sizeof(c8) * (sv.length + 1));
+  char *c_str = ivy_alloc(heap, sizeof(c8) * (sv.length + 1));
   memcpy(c_str, sv.data, sv.length);
 
   c_str[sv.length] = '\0';
 
   sscanf(c_str, "%f", &out);
+
+  ivy_free(heap, c_str);
 
   return out;
 }
