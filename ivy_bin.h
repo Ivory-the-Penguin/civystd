@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 0.8.1
+  Version: 0.9.0
   License: MIT-0
 */
 
@@ -13,33 +13,37 @@
 #include "ivy_linmath.h"
 #include "ivy_sv.h"
 
+#define BIN_MAGIC "_IVY_BIN_"
+#define BIN_MAGIC_LENGTH 8
+
 typedef enum {
   BIN_NONE,
   BIN_ENCODING,
   BIN_DECODING,
-} bit_type_t;
+} bin_state_t;
 
-typedef struct {
+struct bin_t;
+
+typedef void (*bin_encode_fn)(struct bin_t *bin, void *data);
+
+typedef struct bin_t {
+  bin_encode_fn encode_cb;
+  bin_state_t state;
   FILE *file;
-  bit_type_t type;
 } bin_t;
 
-IVY_FORCE_INLINE bin_t bin_make_encoder(const char *path) {
-  bin_t out;
-
-  out.file = fopen(path, "wb");
-  out.type = BIN_ENCODING;
-
-  return out;
-}
-
-IVY_FORCE_INLINE void bin_close(bin_t *bin) {
-  fclose(bin->file);
-  bin->type = BIN_NONE;
+IVY_FORCE_INLINE bin_t bin_make(bin_encode_fn encode_cb) {
+  return (bin_t){
+      .encode_cb = encode_cb,
+      .state = BIN_NONE,
+      .file = NULL,
+  };
 }
 
 IVY_FORCE_INLINE void bin_encode_raw(bin_t *bin, void *ptr, u64 item_size,
                                      u64 count) {
+  IVY_ASSERT(bin->state == BIN_ENCODING,
+             "Bin is either doing nothing or decoding!");
   fwrite(ptr, item_size, count, bin->file);
 }
 
@@ -115,6 +119,20 @@ IVY_FORCE_INLINE void bin_encode_array(bin_t *bin, void *data, u64 item_size,
 
 IVY_FORCE_INLINE void bin_encode_sv(bin_t *bin, string_view_t sv) {
   bin_encode_array(bin, (void *)sv.data, sizeof(c8), sv.length);
+}
+
+IVY_FORCE_INLINE void bin_encode_to_file(bin_t *bin, void *data,
+                                         const char *path) {
+  bin->file = fopen(path, "wb");
+  bin->state = BIN_ENCODING;
+
+  bin_encode_array(bin, BIN_MAGIC, sizeof(c8), BIN_MAGIC_LENGTH);
+
+  bin->encode_cb(bin, data);
+
+  fclose(bin->file);
+  bin->file = NULL;
+  bin->state = BIN_NONE;
 }
 
 #ifdef IVY_ATLEAST_C11
