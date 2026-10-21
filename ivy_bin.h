@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 1.1.1
+  Version: 1.1.2
   License: MIT-0
 */
 
@@ -159,7 +159,8 @@ IVY_FORCE_INLINE void bin_decode_from_file(bin_t *bin, void *data,
 
   u64 loaded_magic = 0;
   bin_process_u64(bin, &loaded_magic);
-  IVY_ASSERT(bin_magic == bin_magic, "File doesn't have right magic header!");
+  IVY_ASSERT(loaded_magic == bin_magic,
+             "File doesn't have right magic header!");
 
   bin->process_cb(bin, data);
 
