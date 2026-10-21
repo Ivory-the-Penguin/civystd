@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 1.0.0
+  Version: 1.1.1
   License: MIT-0
 */
 
@@ -41,9 +41,17 @@ IVY_FORCE_INLINE bin_t bin_make(bin_process_fn process_cb) {
 
 IVY_FORCE_INLINE void bin_process_raw(bin_t *bin, void *ptr, u64 item_size,
                                       u64 count) {
-  IVY_ASSERT(bin->state == BIN_ENCODING,
-             "Bin is either doing nothing or decoding!");
-  fwrite(ptr, item_size, count, bin->file);
+  switch (bin->state) {
+    case BIN_ENCODING:
+      fwrite(ptr, item_size, count, bin->file);
+      break;
+    case BIN_DECODING:
+      fread(ptr, item_size, count, bin->file);
+      break;
+    case BIN_NONE:
+      IVY_ASSERT(bin->state != BIN_NONE, "Bin can't be doing nothing!");
+      break;
+  }
 }
 
 IVY_FORCE_INLINE void bin_process_i8(bin_t *bin, i8 *n) {
@@ -110,22 +118,48 @@ IVY_FORCE_INLINE void bin_process_mat4(bin_t *bin, mat4_t *m) {
   bin_process_raw(bin, m, sizeof(mat4_t), 1);
 }
 
-IVY_FORCE_INLINE void bin_process_array(bin_t *bin, void *data, u64 item_size,
-                                        u64 count) {
+IVY_FORCE_INLINE u64 bin_process_array(bin_t *bin, void **data, u64 item_size,
+                                       u64 count, allocator_t alloc) {
   bin_process_u64(bin, &count);
-  bin_process_raw(bin, data, item_size, count);
+
+  if (bin->state == BIN_DECODING) {
+    *data = ivy_alloc(alloc, item_size * count);
+  }
+
+  bin_process_raw(bin, *data, item_size, count);
+
+  return count;
 }
 
-IVY_FORCE_INLINE void bin_process_sv(bin_t *bin, string_view_t *sv) {
-  bin_process_array(bin, (void *)sv->data, sizeof(c8), sv->length);
+IVY_FORCE_INLINE void bin_process_sv(bin_t *bin, string_view_t *sv,
+                                     allocator_t alloc) {
+  sv->length =
+      bin_process_array(bin, (void **)&sv->data, sizeof(c8), sv->length, alloc);
 }
 
-IVY_FORCE_INLINE void bin_process_to_file(bin_t *bin, void *data,
-                                          const char *path) {
+IVY_FORCE_INLINE void bin_encode_to_file(bin_t *bin, void *data,
+                                         const char *path) {
   bin->file = fopen(path, "wb");
   bin->state = BIN_ENCODING;
 
-  bin_process_u64(bin, (u64 *)&bin_magic);
+  u64 magic_number = bin_magic;
+  bin_process_u64(bin, &magic_number);
+
+  bin->process_cb(bin, data);
+
+  fclose(bin->file);
+  bin->file = NULL;
+  bin->state = BIN_NONE;
+}
+
+IVY_FORCE_INLINE void bin_decode_from_file(bin_t *bin, void *data,
+                                           const char *path) {
+  bin->file = fopen(path, "rb");
+  bin->state = BIN_DECODING;
+
+  u64 loaded_magic = 0;
+  bin_process_u64(bin, &loaded_magic);
+  IVY_ASSERT(bin_magic == bin_magic, "File doesn't have right magic header!");
 
   bin->process_cb(bin, data);
 
@@ -153,8 +187,7 @@ IVY_FORCE_INLINE void bin_process_to_file(bin_t *bin, void *data,
       vec4_t *: bin_process_vec4,      \
       mat2_t *: bin_process_mat2,      \
       mat3_t *: bin_process_mat3,      \
-      mat4_t *: bin_process_mat4,      \
-      string_view_t *: bin_process_sv)((bin_ptr), (item_ptr))
+      mat4_t *: bin_process_mat4)((bin_ptr), (item_ptr))
 
 #endif
 
