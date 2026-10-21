@@ -1,6 +1,6 @@
 /*
   ----- Ivy List -----
-  Version: 1.1.1
+  Version: 1.2.0
   License: MIT-0
 
   This is a header only library that has a generic list for the ivystd.
@@ -12,6 +12,7 @@
 
 #include "ivy_allocator.h"
 #include "ivy_core.h"
+#include "ivy_sv.h"
 
 typedef struct {
   void *data;
@@ -98,5 +99,21 @@ IVY_FORCE_INLINE void list_resize(list_opaque_t *list, u64 new_size) {
     (list_ptr)->data = NULL;                       \
     (list_ptr)->alloc = (allocator_t){0};          \
   } while (0)
+
+typedef list_t(i8) list_i8_t;
+typedef list_t(u8) list_u8_t;
+
+typedef list_t(i16) list_i16_t;
+typedef list_t(u16) list_u16_t;
+
+typedef list_t(i32) list_i32_t;
+typedef list_t(u32) list_u32_t;
+
+typedef list_t(i64) list_i64_t;
+typedef list_t(u64) list_u64_t;
+
+typedef list_t(void *) list_ptr_t;
+
+typedef list_t(string_view_t) list_sv_t;
 
 #endif
