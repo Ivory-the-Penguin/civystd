@@ -76,11 +76,6 @@ typedef unsigned int u32;
 typedef signed int i32;
 typedef unsigned long long u64;
 typedef signed long long i64;
-typedef __SIZE_TYPE__ usize;
-typedef signed long isize;
-typedef unsigned long uptr;
-typedef signed long iptr;
-typedef signed long ptrdiff;
 
 typedef u8 b8;
 
@@ -103,13 +98,6 @@ typedef u8 c8;
 #define U16_MAX (65535)
 #define U32_MAX (4294967295U)
 #define U64_MAX (18446744073709551615ULL)
-
-#define SIZE_MAX ((size_t)-1)
-#define IPTR_MIN (-__LONG_MAX__ - 1)
-#define IPTR_MAX __LONG_MAX__
-#define PTRDIFF_MIN IPTR_MIN
-#define PTRDIFF_MAX IPTR_MAX
-#define UPTR_MAX SIZE_MAX
 
 #ifndef INT_MIN
 #define INT_MIN (-__INT_MAX__ - 1)
