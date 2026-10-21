@@ -2,6 +2,8 @@
   ----- Ivy Binary -----
   Version: 1.1.2
   License: MIT-0
+
+  This header only library has binary serilization for the ivystd.
 */
 
 #ifndef IVY_BIN_H
