@@ -1,6 +1,6 @@
 /*
   ----- Ivy Binary -----
-  Version: 0.9.0
+  Version: 0.10.0
   License: MIT-0
 */
 
@@ -13,8 +13,7 @@
 #include "ivy_linmath.h"
 #include "ivy_sv.h"
 
-#define BIN_MAGIC "_IVY_BIN_"
-#define BIN_MAGIC_LENGTH 8
+#define BIN_MAGIC 0x5F4E49425956495FULL
 
 typedef enum {
   BIN_NONE,
@@ -126,7 +125,7 @@ IVY_FORCE_INLINE void bin_encode_to_file(bin_t *bin, void *data,
   bin->file = fopen(path, "wb");
   bin->state = BIN_ENCODING;
 
-  bin_encode_array(bin, BIN_MAGIC, sizeof(c8), BIN_MAGIC_LENGTH);
+  bin_encode_u64(bin, BIN_MAGIC);
 
   bin->encode_cb(bin, data);
 
