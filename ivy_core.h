@@ -1,6 +1,6 @@
 /*
   ----- Ivy Core -----
-  Version: 0.8.0
+  Version: 0.9.0
   License: MIT-0
 
   This header only library has useful macro's and stuff for the ivystd.
@@ -83,8 +83,6 @@ typedef signed long iptr;
 typedef signed long ptrdiff;
 
 typedef u8 b8;
-typedef u16 b16;
-typedef u32 b32;
 
 typedef float f32;
 typedef double f64;
