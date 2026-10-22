@@ -1,6 +1,6 @@
 /*
   ----- Ivy Os -----
-  Version: 0.6.1
+  Version: 0.7.0
   License: MIT-0
 */
 
@@ -243,8 +243,8 @@ IVY_FORCE_INLINE i64 os_pwrite64(u64 fd, void *buf, u64 count, i64 offset) {
   return os_syscall4(OS_NR_PWRITE64, fd, buf, count, offset);
 }
 
-IVY_FORCE_INLINE i64 os_getdents64(u64 fd, os_dirent_t *dirents, u64 count) {
-  return os_syscall3(OS_NR_GETDENTS64, fd, dirents, count);
+IVY_FORCE_INLINE i64 os_getdents64(u64 fd, void *bufs, u64 count) {
+  return os_syscall3(OS_NR_GETDENTS64, fd, bufs, count);
 }
 
 IVY_FORCE_INLINE i64 os_write(u64 fd, const void *buf, u64 count) {
