@@ -1,6 +1,6 @@
 /*
   ----- Ivy Os -----
-  Version: 0.4.0
+  Version: 0.5.1
   License: MIT-0
 */
 
@@ -107,10 +107,11 @@
 #define OS_NR_OPEN 0x02
 #define OS_NR_CLOSE 0x03
 #define OS_NR_CREAT 0x55
-#define OS_NR_OPENAT 0x142
+#define OS_NR_OPENAT 0x101
 #define OS_NR_PREAD64 0x11
 #define OS_NR_PWRITE64 0x12
-#define OS_NR_STATX 0x18d
+#define OS_NR_STATX 0x14c
+#define OS_NR_GETDENTS64 0xd9
 
 typedef struct {
   u64 sec;
@@ -159,6 +160,15 @@ typedef struct {
   u32 atomic_write_unit_max_opt;
 } os_statx_t;
 
+typedef struct {
+  u64 ino;
+  i64 offset;
+  u16 reclen;
+  u8 type;
+
+  char name[];
+} os_dirent_t;
+
 IVY_FORCE_INLINE void os_exit(u64 return_code) {
   os_syscall1(OS_NR_EXIT, return_code);
 }
@@ -182,6 +192,10 @@ IVY_FORCE_INLINE i64 os_pread64(u64 fd, void *buf, u64 count, i64 offset) {
 
 IVY_FORCE_INLINE i64 os_pwrite64(u64 fd, void *buf, u64 count, i64 offset) {
   return os_syscall4(OS_NR_PWRITE64, fd, buf, count, offset);
+}
+
+IVY_FORCE_INLINE i64 os_getdents64(u64 fd, os_dirent_t *dirents, u64 count) {
+  return os_syscall3(OS_NR_GETDENTS64, fd, dirents, count);
 }
 
 IVY_FORCE_INLINE i64 os_write(u64 fd, const void *buf, u64 count) {
