@@ -2,3 +2,4 @@ main.c
 test_game.c
 compile_flags.txt
 test.bin
+out
