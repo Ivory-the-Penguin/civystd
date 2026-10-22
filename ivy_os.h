@@ -1,6 +1,6 @@
 /*
   ----- Ivy Os -----
-  Version: 0.5.1
+  Version: 0.6.1
   License: MIT-0
 */
 
@@ -113,8 +113,57 @@
 #define OS_NR_STATX 0x14c
 #define OS_NR_GETDENTS64 0xd9
 
+#define OS_O_READ_ONLY 0
+#define OS_O_WRITE_ONLY (1 << 0)
+#define OS_O_READ_WRITE (1 << 1)
+
+#define OS_O_CREAT (1 << 6)
+#define OS_O_EXCL (1 << 7)
+#define OS_O_NOCTTY (1 << 8)
+#define OS_O_TRUNC (1 << 9)
+#define OS_O_APPEND (1 << 10)
+#define OS_O_NONBLOCK (1 << 12)
+
+#define OS_O_DIRECTORY (1 << 16)
+#define OS_O_NOFOLLOW (1 << 17)
+#define OS_O_CLOEXEC (1 << 19)
+
+#define OS_STATX_TYPE (1 << 0)
+#define OS_STATX_MODE (1 << 1)
+#define OS_STATX_NLINK (1 << 2)
+#define OS_STATX_UID (1 << 3)
+#define OS_STATX_GUI (1 << 4)
+#define OS_STATX_ACESS_TIME (1 << 5)
+#define OS_STATX_MOD_TIME (1 << 6)
+#define OS_STATX_STATUS_CHANGE_TIME (1 << 7)
+#define OS_STATX_INO (1 << 8)
+#define OS_STATX_SIZE (1 << 9)
+#define OS_STATX_BLOCKS (1 << 10)
+#define OS_STATX_CREATION_TIME (1 << 11)
+
+#define OS_MODE_OTHER_EXEC (1 << 0)
+#define OS_MODE_OTHER_WRITE (1 << 1)
+#define OS_MODE_OTHER_READ (1 << 2)
+
+#define OS_MODE_GROUP_EXEC (1 << 3)
+#define OS_MODE_GROUP_WRITE (1 << 4)
+#define OS_MODE_GROUP_READ (1 << 5)
+
+#define OS_MODE_OWNER_EXEC (1 << 6)
+#define OS_MODE_OWNER_WRITE (1 << 7)
+#define OS_MODE_OWNER_READ (1 << 8)
+
+#define OS_MODE_STANDARD_FILE                                      \
+  (OS_MODE_OWNER_READ | OS_MODE_OWNER_WRITE | OS_MODE_GROUP_READ | \
+   OS_MODE_OTHER_READ)
+
+#define OS_MODE_STANDARD_DIR                                       \
+  (OS_MODE_OWNER_READ | OS_MODE_OWNER_WRITE | OS_MODE_OWNER_EXEC | \
+   OS_MODE_GROUP_READ | OS_MODE_GROUP_EXEC | OS_MODE_OTHER_READ |  \
+   OS_MODE_OTHER_EXEC)
+
 typedef struct {
-  u64 sec;
+  i64 sec;
   u32 nsec;
   u32 _pad;
 } os_statx_ts_t;
