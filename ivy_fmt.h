@@ -74,7 +74,7 @@ string_view_t _fmt_raw(allocator_t alloc, string_view_t fmt, va_list args) {
   string_builder_t buffer = sb_make(heap);
 
   while (fmt.length > 0) {
-    c8 chopped = fmt.data[0];
+    u8 chopped = fmt.data[0];
     fmt = sv_chop_left(fmt, 1);
 
     if (chopped != '{' && chopped != '}') {
@@ -88,7 +88,7 @@ string_view_t _fmt_raw(allocator_t alloc, string_view_t fmt, va_list args) {
       continue;
     }
     string_view_t full_option = sv_chop_by_delimiter(&fmt, '}');
-    b8 found = false;
+    u8 found = false;
 
     string_view_t fmt_option = sv_chop_by_delimiter(&full_option, ':');
     string_view_t flags = full_option;
@@ -125,7 +125,7 @@ void ivy_print(const char *fmt, ...) {
   string_view_t view = _fmt_raw(heap, sv(fmt), args);
   va_end(args);
 
-  fwrite(view.data, sizeof(c8), view.length, stdout);
+  fwrite(view.data, sizeof(u8), view.length, stdout);
 
   ivy_free(heap, (void *)view.data);
 }
@@ -136,7 +136,7 @@ void ivy_print_file(FILE *file, const char *fmt, ...) {
   string_view_t view = _fmt_raw(heap, sv(fmt), args);
   va_end(args);
 
-  fwrite(view.data, sizeof(c8), view.length, file);
+  fwrite(view.data, sizeof(u8), view.length, file);
 
   ivy_free(heap, (void *)view.data);
 }
@@ -172,8 +172,8 @@ IVY_FORCE_INLINE void _fmt_c_string(va_list args, string_builder_t *buffer,
 
 IVY_FORCE_INLINE void _fmt_integer(va_list args, string_builder_t *buffer,
                                    string_view_t flags, allocator_t scratch) {
-  b8 is_unsigned = false;
-  b8 is_long = false;
+  u8 is_unsigned = false;
+  u8 is_long = false;
   SV_FOREACH(flags, i, 0) {
     switch (flags.data[i]) {
       case 'u':
@@ -278,7 +278,7 @@ IVY_FORCE_INLINE void _fmt_vec4(va_list args, string_builder_t *buffer,
 
 IVY_FORCE_INLINE void _fmt_boolean(va_list args, string_builder_t *buffer,
                                    string_view_t flags, allocator_t scratch) {
-  b8 b = va_arg(args, u32);
+  u8 b = va_arg(args, u32);
   if (b) {
     sb_append_sv(buffer, sv("true"));
   } else {
@@ -306,12 +306,12 @@ i64 fmt_parse_i64(string_view_t sv) {
   IVY_ASSERT(sv.data != NULL && sv.length > 0,
              "String view can't be null or empty!");
 
-  b8 is_negative = (sv.data[0] == '-');
+  u8 is_negative = (sv.data[0] == '-');
   sv = sv_chop_left(sv, is_negative);
 
   i64 out = 0;
   SV_FOREACH(sv, i, 0) {
-    c8 c = sv.data[i];
+    u8 c = sv.data[i];
 
     IVY_ASSERT(isdigit(c),
                "String view can't contain a nonnumerical character, or a "
@@ -340,7 +340,7 @@ u64 fmt_parse_u64(string_view_t sv) {
 
   u64 out = 0;
   SV_FOREACH(sv, i, 0) {
-    c8 c = sv.data[i];
+    u8 c = sv.data[i];
 
     IVY_ASSERT(isdigit(c),
                "String view can't contain a nonnumerical character, or a "
@@ -361,7 +361,7 @@ u64 fmt_parse_u64(string_view_t sv) {
 }
 
 string_view_t fmt_i64(allocator_t alloc, i64 n) {
-  b8 is_negative = false;
+  u8 is_negative = false;
   u64 out_n;
   if (n < 0) {
     is_negative = true;
@@ -378,7 +378,7 @@ string_view_t fmt_i64(allocator_t alloc, i64 n) {
   }
   length = (length == 0 ? 0 : length - 1) + is_negative;
 
-  c8 *buffer = ivy_alloc(alloc, length + 2);
+  u8 *buffer = ivy_alloc(alloc, length + 2);
 
   if (is_negative) {
     buffer[0] = '-';
@@ -406,7 +406,7 @@ string_view_t fmt_u64(allocator_t alloc, u64 n) {
   }
   length = (length == 0 ? 0 : length - 1);
 
-  c8 *buffer = ivy_alloc(alloc, length + 2);
+  u8 *buffer = ivy_alloc(alloc, length + 2);
 
   for (i64 i = length; i >= 0; i--) {
     *(buffer + i) = (n % 10) + '0';
@@ -424,7 +424,7 @@ string_view_t fmt_u64(allocator_t alloc, u64 n) {
 f32 fmt_parse_f32(string_view_t sv) {
   f32 out;
 
-  char *c_str = ivy_alloc(heap, sizeof(c8) * (sv.length + 1));
+  char *c_str = ivy_alloc(heap, sizeof(u8) * (sv.length + 1));
   memcpy(c_str, sv.data, sv.length);
 
   c_str[sv.length] = '\0';

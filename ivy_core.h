@@ -77,12 +77,8 @@ typedef signed int i32;
 typedef unsigned long long u64;
 typedef signed long long i64;
 
-typedef u8 b8;
-
 typedef float f32;
 typedef double f64;
-
-typedef u8 c8;
 
 #define I8_MIN (-128)
 #define I16_MIN (-32767 - 1)
@@ -128,8 +124,6 @@ typedef u8 c8;
 #define ULLONG_MAX ((unsigned long long)(__LONG_LONG_MAX__) * 2 + 1)
 #endif
 
-#define C8_MAX U8_MAX
-
 #ifndef IVY_ATLEAST_C23
 
 #ifndef true
@@ -141,5 +135,17 @@ typedef u8 c8;
 #endif
 
 #endif
+
+// IVY_FORCE_INLINE void *ivy_memcpy(void *dest, void *src, u64 n) {
+//   for (u64 i = 0; i < n; i++) {
+//     *(((u8 *)dest) + i) = *(((u8 *)dest) + i);
+//   }
+//
+//   return dest;
+// }
+//
+// IVY_FORCE_INLINE void *ivy_memmove(void *dest, void *src, u64 n) {
+//   return dest;
+// }
 
 #endif

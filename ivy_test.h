@@ -34,13 +34,13 @@ extern IVY_THREAD_LOCAL allocator_t _scratch_alloc;
   ivy_print("{i:ul}/{i:ul} TESTS {cs}\n\n", tests_passed, total_tests, \
             TEST_CASE_PASSED);
 
-#define TEST_CASE(name) IVY_FORCE_INLINE b8(name)(allocator_t test_alloc)
+#define TEST_CASE(name) IVY_FORCE_INLINE u8(name)(allocator_t test_alloc)
 
 #define TEST_RUN(name)                                   \
   do {                                                   \
     test_msg = NULL;                                     \
     total_tests++;                                       \
-    b8 result = (name)(test_alloc);                      \
+    u8 result = (name)(test_alloc);                      \
     if (result) {                                        \
       ivy_print(TEST_CASE_FMT, TEST_CASE_PASSED, #name); \
       tests_passed++;                                    \

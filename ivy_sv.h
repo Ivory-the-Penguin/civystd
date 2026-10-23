@@ -78,7 +78,7 @@ alloc.
 #include "ivy_math.h"
 
 typedef struct {
-  const c8 *data;
+  const u8 *data;
   u64 length;
 } string_view_t;
 
@@ -93,7 +93,7 @@ typedef struct {
 // Only for c strings. If you need a sv, just manually create the string view
 IVY_FORCE_INLINE string_view_t sv(const char *c_str) {
   return (string_view_t){
-      .data = (const c8 *)c_str,
+      .data = (const u8 *)c_str,
       .length = strlen(c_str),
   };
 }
@@ -117,7 +117,7 @@ IVY_FORCE_INLINE i8 sv_compare(string_view_t a, string_view_t b) {
   return (cmp > 0 ? 1 : -1);
 }
 
-IVY_FORCE_INLINE b8 sv_has_prefix(string_view_t sv, string_view_t prefix) {
+IVY_FORCE_INLINE u8 sv_has_prefix(string_view_t sv, string_view_t prefix) {
   if (prefix.length > sv.length) {
     return false;
   }
@@ -140,7 +140,7 @@ IVY_FORCE_INLINE string_view_t sv_chop_right(string_view_t sv, u64 n) {
 }
 
 IVY_FORCE_INLINE string_view_t sv_trim_left(string_view_t sv) {
-  while (sv.length > 0 && isspace((c8)sv.data[0])) {
+  while (sv.length > 0 && isspace((u8)sv.data[0])) {
     sv = sv_chop_left(sv, 1);
   }
 
@@ -148,7 +148,7 @@ IVY_FORCE_INLINE string_view_t sv_trim_left(string_view_t sv) {
 }
 
 IVY_FORCE_INLINE string_view_t sv_trim_right(string_view_t sv) {
-  while (sv.length > 0 && isspace((c8)sv.data[sv.length - 1])) {
+  while (sv.length > 0 && isspace((u8)sv.data[sv.length - 1])) {
     sv = sv_chop_right(sv, 1);
   }
 
@@ -165,7 +165,7 @@ IVY_FORCE_INLINE string_view_t sv_trim(string_view_t sv) {
 // Recommended to use ivy_format instead of this.
 IVY_FORCE_INLINE string_view_t sv_combine(allocator_t alloc, string_view_t a,
                                           string_view_t b) {
-  c8 *new_buffer = (c8 *)ivy_alloc(alloc, a.length + b.length + 1);
+  u8 *new_buffer = (u8 *)ivy_alloc(alloc, a.length + b.length + 1);
   memcpy(new_buffer, a.data, a.length);
   memcpy(new_buffer + a.length, b.data, b.length);
   new_buffer[a.length + b.length] = '\0';
@@ -175,7 +175,7 @@ IVY_FORCE_INLINE string_view_t sv_combine(allocator_t alloc, string_view_t a,
   };
 }
 
-string_view_t sv_chop_by_delimiter(string_view_t *sv, c8 delimiter);
+string_view_t sv_chop_by_delimiter(string_view_t *sv, u8 delimiter);
 
 // is_type is what IS a delimiter.
 string_view_t sv_chop_by_type(string_view_t *sv, int (*is_type)(int c));
@@ -185,7 +185,7 @@ string_view_t sv_chop_by_type_rev(string_view_t *sv, int (*is_type)(int c));
 
 #ifdef IVY_IMPL
 
-string_view_t sv_chop_by_delimiter(string_view_t *sv, c8 delimiter) {
+string_view_t sv_chop_by_delimiter(string_view_t *sv, u8 delimiter) {
   while (sv->length > 0 && sv->data[0] == delimiter) {
     *sv = sv_chop_left(*sv, 1);
   }
@@ -216,7 +216,7 @@ string_view_t sv_chop_by_delimiter(string_view_t *sv, c8 delimiter) {
 
 // is_type is what IS a delimiter
 string_view_t sv_chop_by_type(string_view_t *sv, int (*is_type)(int c)) {
-  while (sv->length > 0 && is_type((c8)sv->data[0])) {
+  while (sv->length > 0 && is_type((u8)sv->data[0])) {
     *sv = sv_chop_left(*sv, 1);
   }
 
@@ -227,7 +227,7 @@ string_view_t sv_chop_by_type(string_view_t *sv, int (*is_type)(int c)) {
   u64 end = 0;
   do {
     end++;
-  } while (end < sv->length && !is_type((c8)sv->data[end]));
+  } while (end < sv->length && !is_type((u8)sv->data[end]));
 
   string_view_t out;
   if (end < sv->length) {
@@ -246,7 +246,7 @@ string_view_t sv_chop_by_type(string_view_t *sv, int (*is_type)(int c)) {
 
 // is_type is what ISN'T a delimiter
 string_view_t sv_chop_by_type_rev(string_view_t *sv, int (*is_type)(int c)) {
-  while (sv->length > 0 && !is_type((c8)sv->data[0])) {
+  while (sv->length > 0 && !is_type((u8)sv->data[0])) {
     *sv = sv_chop_left(*sv, 1);
   }
 
@@ -257,7 +257,7 @@ string_view_t sv_chop_by_type_rev(string_view_t *sv, int (*is_type)(int c)) {
   u64 end = 0;
   do {
     end++;
-  } while (end < sv->length && is_type((c8)sv->data[end]));
+  } while (end < sv->length && is_type((u8)sv->data[end]));
 
   string_view_t out;
   if (end < sv->length) {

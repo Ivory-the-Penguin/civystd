@@ -33,7 +33,7 @@ IVY_FORCE_INLINE u64 align_bytes(u64 bytes) {
   return (u64)((bytes + 15) & ~15);
 }
 
-IVY_FORCE_INLINE b8 allocator_has_flag(allocator_t alloc,
+IVY_FORCE_INLINE u8 allocator_has_flag(allocator_t alloc,
                                        allocator_flag_t flag) {
   return (alloc.flags & flag) > 0;
 }

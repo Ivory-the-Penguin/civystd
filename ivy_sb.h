@@ -16,7 +16,7 @@
 #include "ivy_sv.h"
 
 typedef struct {
-  c8 *data;
+  u8 *data;
   u64 length;
   u64 capacity;
   allocator_t alloc;
@@ -29,7 +29,7 @@ IVY_FORCE_INLINE string_builder_t sb_make_with_reserved(allocator_t alloc,
   IVY_ASSERT(capacity > 0, "Capacity can't be zero");
 
   return (string_builder_t){
-      .data = (c8 *)ivy_alloc(alloc, capacity * sizeof(c8)),
+      .data = (u8 *)ivy_alloc(alloc, capacity * sizeof(u8)),
       .capacity = capacity,
       .length = 0,
       .alloc = alloc,
@@ -67,12 +67,12 @@ IVY_FORCE_INLINE void sb_free(string_builder_t *sb) {
 IVY_FORCE_INLINE void sb_expand(string_builder_t *sb, u64 capacity) {
   IVY_ASSERT(sb->capacity < capacity, "New capacity has to be bigger than old");
 
-  sb->data = (c8 *)ivy_realloc(sb->alloc, sb->data,
-                               align_bytes(capacity * sizeof(c8)));
+  sb->data = (u8 *)ivy_realloc(sb->alloc, sb->data,
+                               align_bytes(capacity * sizeof(u8)));
   sb->capacity = align_bytes(capacity);
 }
 
-IVY_FORCE_INLINE void sb_append_char(string_builder_t *sb, c8 c) {
+IVY_FORCE_INLINE void sb_append_char(string_builder_t *sb, u8 c) {
   if (sb->length + 1 > sb->capacity) {
     sb_expand(sb, sb->capacity * 2);
   }
@@ -100,7 +100,7 @@ IVY_FORCE_INLINE void sb_pop(string_builder_t *sb, u64 amount) {
 
 IVY_FORCE_INLINE string_view_t sb_to_sv(allocator_t alloc,
                                         string_builder_t *sb) {
-  c8 *buffer = (c8 *)ivy_alloc(alloc, sb->length + 1);
+  u8 *buffer = (u8 *)ivy_alloc(alloc, sb->length + 1);
 
   memcpy(buffer, sb->data, sb->length);
   buffer[sb->length] = '\0';

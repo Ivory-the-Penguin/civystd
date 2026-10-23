@@ -136,7 +136,7 @@ IVY_FORCE_INLINE u64 bin_process_array(bin_t *bin, void **data, u64 item_size,
 IVY_FORCE_INLINE void bin_process_sv(bin_t *bin, string_view_t *sv,
                                      allocator_t alloc) {
   sv->length =
-      bin_process_array(bin, (void **)&sv->data, sizeof(c8), sv->length, alloc);
+      bin_process_array(bin, (void **)&sv->data, sizeof(u8), sv->length, alloc);
 }
 
 IVY_FORCE_INLINE void bin_encode_to_file(bin_t *bin, void *data,

@@ -328,7 +328,7 @@ IVY_FORCE_INLINE f32 vec2_dot(vec2_t a, vec2_t b) {
 IVY_FORCE_INLINE f32 vec2_len_sq(vec2_t vec) { return vec2_dot(vec, vec); }
 IVY_FORCE_INLINE f32 vec2_len(vec2_t vec) { return ivy_sqrt(vec2_len_sq(vec)); }
 
-IVY_FORCE_INLINE b8 vec2_eq(vec2_t a, vec2_t b) {
+IVY_FORCE_INLINE u8 vec2_eq(vec2_t a, vec2_t b) {
   return (a.x == b.x && a.y == b.y);
 }
 
@@ -413,7 +413,7 @@ IVY_FORCE_INLINE f32 vec3_dot(vec3_t a, vec3_t b) {
 IVY_FORCE_INLINE f32 vec3_len_sq(vec3_t vec) { return vec3_dot(vec, vec); }
 IVY_FORCE_INLINE f32 vec3_len(vec3_t vec) { return ivy_sqrt(vec3_len_sq(vec)); }
 
-IVY_FORCE_INLINE b8 vec3_eq(vec3_t a, vec3_t b) {
+IVY_FORCE_INLINE u8 vec3_eq(vec3_t a, vec3_t b) {
   return (a.x == b.x && a.y == b.y && a.z == b.z);
 }
 
@@ -561,7 +561,7 @@ IVY_FORCE_INLINE f32 vec4_dot(vec4_t a, vec4_t b) {
 IVY_FORCE_INLINE f32 vec4_len_sq(vec4_t vec) { return vec4_dot(vec, vec); }
 IVY_FORCE_INLINE f32 vec4_len(vec4_t vec) { return ivy_sqrt(vec4_len_sq(vec)); }
 
-IVY_FORCE_INLINE b8 vec4_eq(vec4_t a, vec4_t b) {
+IVY_FORCE_INLINE u8 vec4_eq(vec4_t a, vec4_t b) {
   return (a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w);
 }
 
