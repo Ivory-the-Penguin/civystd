@@ -1,5 +1,7 @@
 # The Ivy Standard Library
 
+**NOTE**: This is the c version of civystd and is now not worked on anymore. If you want the current one, in C++, go to [here](https://github.com/Ivory-the-Penguin/ivystd)
+
 The `ivystd` is a collection of headers (some stb-style, others header only) that are meant as useful utilities. The _original_ target is gamedev, but it can support other fields.
 
 ## Why?
